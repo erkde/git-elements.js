@@ -70,8 +70,20 @@ describe("GitDiffElement Rendering", () => {
   it("loads and renders a patch from the src attribute", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(SAMPLE_PATCH));
     vi.stubGlobal("fetch", fetchMock);
+    const loadListener = vi.fn();
+    element.addEventListener("load", loadListener);
+    const loadingContent = document.createElement("span");
+    loadingContent.slot = "loading";
+    loadingContent.textContent = "Loading changes…";
+    element.appendChild(loadingContent);
 
     element.src = "/sample.patch";
+
+    expect((element.shadowRoot!.querySelector("[part='loading']") as HTMLElement).hidden).toBe(
+      false,
+    );
+    expect((element.shadowRoot!.querySelector("[part='error']") as HTMLElement).hidden).toBe(true);
+    expect(element.getAttribute("aria-busy")).toBe("true");
 
     await vi.waitFor(() => {
       expect(element.shadowRoot!.querySelectorAll(".diff-row")).toHaveLength(2);
@@ -80,6 +92,73 @@ describe("GitDiffElement Rendering", () => {
       "/sample.patch",
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     );
+    expect(element.hasAttribute("aria-busy")).toBe(false);
+    expect((element.shadowRoot!.querySelector("[part='loading']") as HTMLElement).hidden).toBe(
+      true,
+    );
+    expect(loadListener).toHaveBeenCalledOnce();
+  });
+
+  it("replaces stale output with an accessible error state when src fails", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response("Not found", {
+        status: 404,
+        statusText: "Not Found",
+      }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const errorListener = vi.fn();
+    element.addEventListener("error", errorListener);
+    const errorContent = document.createElement("span");
+    errorContent.slot = "error";
+    errorContent.textContent = "Changes unavailable.";
+    element.appendChild(errorContent);
+
+    element.patch = SAMPLE_PATCH;
+    element.src = "/missing.patch";
+
+    expect(element.shadowRoot!.querySelectorAll(".diff-row")).toHaveLength(0);
+
+    await vi.waitFor(() => {
+      expect((element.shadowRoot!.querySelector("[part='error']") as HTMLElement).hidden).toBe(
+        false,
+      );
+    });
+
+    expect(element.patch).toBe("");
+    expect(element.parsedDiffs).toHaveLength(0);
+    expect(element.shadowRoot!.querySelector("[part='error']")?.getAttribute("role")).toBe("alert");
+    expect((element.shadowRoot!.querySelector("[part='loading']") as HTMLElement).hidden).toBe(
+      true,
+    );
+    expect(element.hasAttribute("aria-busy")).toBe(false);
+    expect(errorListener).toHaveBeenCalledOnce();
+    const event = errorListener.mock.calls[0]![0] as Event;
+    expect(event.bubbles).toBe(false);
+    expect(event.cancelable).toBe(false);
+  });
+
+  it("keeps an explicitly assigned patch when a pending src request completes", async () => {
+    let resolveResponse: ((response: Response) => void) | undefined;
+    const fetchMock = vi.fn().mockReturnValue(
+      new Promise<Response>((resolve) => {
+        resolveResponse = resolve;
+      }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    element.src = "/slow.patch";
+    element.patch = SAMPLE_PATCH;
+
+    const request = fetchMock.mock.calls[0]![1] as RequestInit;
+    expect(request.signal?.aborted).toBe(true);
+
+    resolveResponse?.(new Response("--- a/late.txt\n+++ b/late.txt"));
+    await Promise.resolve();
+
+    expect(element.patch).toBe(SAMPLE_PATCH);
+    expect(element.shadowRoot!.querySelector(".file-path")?.textContent).toBe("src/index.ts");
   });
 
   it("renders a patch from a text/plain child", () => {

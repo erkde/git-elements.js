@@ -7,6 +7,8 @@ export class GitDiffElement extends HTMLElement {
   private _patch = "";
   private _parsedDiffs: ParsedDiff[] = [];
   private _container: HTMLDivElement;
+  private _loadingState: HTMLDivElement;
+  private _errorState: HTMLDivElement;
   private _sourceRequest: AbortController | null = null;
   private _inlinePatchObserver: MutationObserver;
 
@@ -17,7 +19,11 @@ export class GitDiffElement extends HTMLElement {
 
     this._container = document.createElement("div");
     this._container.setAttribute("part", "container");
-    shadow.appendChild(this._container);
+
+    this._loadingState = this.createResourceState("loading", "status");
+    this._errorState = this.createResourceState("error", "alert");
+
+    shadow.append(this._container, this._loadingState, this._errorState);
 
     this._inlinePatchObserver = new MutationObserver(() => {
       if (!this.src) {
@@ -44,6 +50,8 @@ export class GitDiffElement extends HTMLElement {
 
   disconnectedCallback(): void {
     this._sourceRequest?.abort();
+    this.removeAttribute("aria-busy");
+    this.showResourceState(null);
     this._inlinePatchObserver.disconnect();
   }
 
@@ -88,6 +96,14 @@ export class GitDiffElement extends HTMLElement {
   }
 
   set patch(value: string) {
+    this._sourceRequest?.abort();
+    this._sourceRequest = null;
+    this.removeAttribute("aria-busy");
+    this.showResourceState(null);
+    this.setPatch(value);
+  }
+
+  private setPatch(value: string): void {
     this._patch = value;
     this._parsedDiffs = parseDiff(value);
     this.render();
@@ -151,6 +167,11 @@ export class GitDiffElement extends HTMLElement {
 
     const request = new AbortController();
     this._sourceRequest = request;
+    this._patch = "";
+    this._parsedDiffs = [];
+    this.setAttribute("aria-busy", "true");
+    this._container.replaceChildren();
+    this.showResourceState("loading");
 
     try {
       const response = await fetch(src, { signal: request.signal });
@@ -162,10 +183,19 @@ export class GitDiffElement extends HTMLElement {
 
       const patch = await response.text();
       if (!request.signal.aborted) {
-        this.patch = patch;
+        this.setPatch(patch);
+        this.removeAttribute("aria-busy");
+        this.showResourceState(null);
+        this.dispatchEvent(new Event("load"));
       }
     } catch (error) {
       if (!request.signal.aborted) {
+        this._patch = "";
+        this._parsedDiffs = [];
+        this.removeAttribute("aria-busy");
+        this._container.replaceChildren();
+        this.showResourceState("error");
+        this.dispatchEvent(new Event("error"));
         console.error(error);
       }
     } finally {
@@ -173,6 +203,25 @@ export class GitDiffElement extends HTMLElement {
         this._sourceRequest = null;
       }
     }
+  }
+
+  private createResourceState(type: "loading" | "error", role: "status" | "alert"): HTMLDivElement {
+    const state = document.createElement("div");
+    state.className = `resource-state resource-${type}`;
+    state.setAttribute("part", type);
+    state.setAttribute("role", role);
+    state.hidden = true;
+
+    const slot = document.createElement("slot");
+    slot.name = type;
+    state.appendChild(slot);
+
+    return state;
+  }
+
+  private showResourceState(type: "loading" | "error" | null): void {
+    this._loadingState.hidden = type !== "loading";
+    this._errorState.hidden = type !== "error";
   }
 
   private render(): void {

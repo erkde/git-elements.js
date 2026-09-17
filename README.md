@@ -36,6 +36,27 @@ Assign raw diff text from JavaScript with the `patch` property:
 document.querySelector("git-diff").patch = rawDiff;
 ```
 
+Assigning `patch` directly cancels any pending `src` request so that a late response cannot replace
+the explicitly supplied content.
+
+External sources follow the native resource-element lifecycle. The element dispatches `load` after
+rendering or `error` when the source cannot be loaded. It renders no status UI by default; optional
+named slots provide declarative loading and error content. Loading content appears after 150ms to
+avoid flicker and can be adjusted with `--git-diff-loading-delay`.
+
+```html
+<git-diff src="./changes.patch">
+  <div slot="loading">Loading changes…</div>
+  <div slot="error">Changes unavailable.</div>
+</git-diff>
+```
+
+```js
+const diff = document.querySelector("git-diff");
+diff.addEventListener("load", () => console.log("Diff loaded"));
+diff.addEventListener("error", () => console.log("Diff failed to load"));
+```
+
 The parser supports ordinary multi-file patches, additions and deletions, renames and copies,
 mode-only changes, binary-file indicators, and Git-quoted paths. Pass uncolored output from
 `git diff --no-color` for consistent rendering.

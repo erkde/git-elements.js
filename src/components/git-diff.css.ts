@@ -13,6 +13,7 @@ sheet.replaceSync(/* css */ `
   --git-diff-font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
   --git-diff-font-size: 12px;
   --git-diff-line-height: 20px;
+  --git-diff-loading-delay: 150ms;
 
   display: block;
   overflow-x: auto;
@@ -65,6 +66,24 @@ sheet.replaceSync(/* css */ `
 
 .file-diff {
   padding: 6px 0 8px;
+}
+
+.resource-state[hidden] {
+  display: none;
+}
+
+.resource-loading {
+  animation: reveal-loading 0s var(--git-diff-loading-delay) both;
+}
+
+@keyframes reveal-loading {
+  from {
+    visibility: hidden;
+  }
+
+  to {
+    visibility: visible;
+  }
 }
 
 .file-diff + .file-diff {

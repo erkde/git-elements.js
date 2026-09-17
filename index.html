@@ -367,6 +367,7 @@
         <a href="#changes">Change types</a>
         <a href="#themes">Themes</a>
         <a href="#api">API</a>
+        <a href="#lifecycle">Lifecycle</a>
         <a href="#styling">Styling</a>
       </nav>
     </header>
@@ -523,8 +524,8 @@ diff.patch = rawDiffText;</code></pre>
       <section id="api">
         <h2><code>&lt;git-diff&gt;</code> API</h2>
         <p>
-          The element stays deliberately small: one source attribute, one direct-data property, one
-          parsed result, and an optional theme override.
+          The element stays deliberately small, with URL, property, and inline inputs plus
+          native-style loading events.
         </p>
 
         <table class="api-table">
@@ -544,7 +545,7 @@ diff.patch = rawDiffText;</code></pre>
             <tr>
               <td><code>patch</code></td>
               <td>JavaScript property</td>
-              <td>Set raw unified diff text directly and rerender immediately.</td>
+              <td>Set raw unified diff text directly, cancel any pending load, and rerender.</td>
             </tr>
             <tr>
               <td><code>parsedDiffs</code></td>
@@ -566,8 +567,68 @@ diff.patch = rawDiffText;</code></pre>
               <td>Child element</td>
               <td>Provide an inline patch declaratively.</td>
             </tr>
+            <tr>
+              <td><code>slot="loading"</code></td>
+              <td>Named slot</td>
+              <td>
+                Optional content shown when a <code>src</code> request takes longer than 150ms.
+              </td>
+            </tr>
+            <tr>
+              <td><code>slot="error"</code></td>
+              <td>Named slot</td>
+              <td>Optional content shown when a <code>src</code> request fails.</td>
+            </tr>
+            <tr>
+              <td><code>load</code></td>
+              <td>Event</td>
+              <td>Fires after a <code>src</code> patch has loaded and rendered.</td>
+            </tr>
+            <tr>
+              <td><code>error</code></td>
+              <td>Event</td>
+              <td>Fires when a <code>src</code> patch cannot be loaded.</td>
+            </tr>
           </tbody>
         </table>
+      </section>
+
+      <section id="lifecycle">
+        <h2>Loading lifecycle</h2>
+        <p>
+          While <code>src</code> is loading, the component exposes <code>aria-busy</code> but
+          renders no status UI by default. Supply named slots when the page needs loading or error
+          content. Loading content is delayed by 150ms to avoid flicker on fast requests.
+        </p>
+
+        <div class="example-grid">
+          <article class="example-card">
+            <div class="card-copy">
+              <h3>Provide fallback content</h3>
+              <p>The page controls the wording, styling, and complexity of each state.</p>
+            </div>
+            <pre><code>&lt;git-diff src="./changes.patch"&gt;
+  &lt;div slot="loading"&gt;Loading changes…&lt;/div&gt;
+  &lt;div slot="error"&gt;Changes unavailable.&lt;/div&gt;
+&lt;/git-diff&gt;</code></pre>
+          </article>
+
+          <article class="example-card">
+            <div class="card-copy">
+              <h3>Respond to the result</h3>
+              <p>Success and failure also follow the familiar native resource event model.</p>
+            </div>
+            <pre><code>const diff = document.querySelector("git-diff");
+
+diff.addEventListener("load", () =&gt; {
+  console.log("Diff loaded");
+});
+
+diff.addEventListener("error", () =&gt; {
+  console.log("Diff failed to load");
+});</code></pre>
+          </article>
+        </div>
       </section>
 
       <section id="styling">
@@ -584,6 +645,7 @@ diff.patch = rawDiffText;</code></pre>
   --git-diff-del-text: #ff8fa3;
   --git-diff-hunk-text: #b5a4ff;
   --git-diff-font-size: 13px;
+  --git-diff-loading-delay: 200ms;
 }
 
 git-diff::part(file-header) {
