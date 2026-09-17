@@ -1,5 +1,5 @@
 {
-  "name": "git-elements",
+  "name": "@erkde/git-elements",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "files": [
@@ -21,6 +21,9 @@
       "types": "./dist/components/git-diff.d.ts",
       "import": "./dist/components/git-diff.js"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "dev": "vite",

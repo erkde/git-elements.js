@@ -2,6 +2,18 @@
 
 Web components for presenting Git command output on the web.
 
+## Installation
+
+```sh
+npm install @erkde/git-elements
+```
+
+Import the package once to register its custom elements:
+
+```js
+import "@erkde/git-elements";
+```
+
 ## `<git-diff>`
 
 Render a diff from a URL:
@@ -63,6 +75,7 @@ mode-only changes, binary-file indicators, and Git-quoted paths. Pass uncolored 
 
 ## Direction
 
-`git-elements` is intended to grow into a focused collection of elements for Git output, such as
-commit history and working-tree status. Each component will use a documented, stable Git output
-format while sharing the same loading, theming, and terminal-inspired presentation conventions.
+`@erkde/git-elements` is intended to grow into a focused collection of elements for Git output,
+such as commit history and working-tree status. Each component will use a documented, stable Git
+output format while sharing the same loading, theming, and terminal-inspired presentation
+conventions.
