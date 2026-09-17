@@ -1,0 +1,43 @@
+{
+  "name": "git-elements",
+  "version": "0.1.0",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "./dist/index.js"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components/git-diff": {
+      "types": "./dist/components/git-diff.d.ts",
+      "import": "./dist/components/git-diff.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run format:check && tsup && tsc",
+    "build:demo": "vite build",
+    "check-types": "tsc --noEmit",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "preview": "npm run build:demo && vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "happy-dom": "^20.14.5",
+    "oxfmt": "^0.68.0",
+    "tsup": "^8.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1"
+  }
+}

@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Interactive examples and API documentation for git-elements web components."
+    />
+    <title>git-elements.js — Playground</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background: #0d1117;
+        color: #c9d1d9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 24px 64px;
+      }
+
+      a {
+        color: #58a6ff;
+      }
+
+      code,
+      textarea {
+        font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      }
+
+      code {
+        font-size: 0.9em;
+      }
+
+      .hero {
+        padding: 72px 0 40px;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: #3fb950;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        /* max-width: 760px; */
+        margin: 0;
+        color: #f0f6fc;
+        font-size: clamp(2rem, 5vw, 3.25rem);
+        font-weight: 650;
+        letter-spacing: normal;
+        line-height: 0.98;
+      }
+
+      .lead {
+        max-width: 720px;
+        margin: 24px 0 0;
+        color: #8b949e;
+        font-size: 1.15rem;
+        line-height: 1.65;
+      }
+
+      .jump-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .jump-links a,
+      .feature-list span {
+        padding: 7px 11px;
+        border: 1px solid #30363d;
+        border-radius: 999px;
+        background: #161b22;
+        color: #c9d1d9;
+        font-size: 0.82rem;
+        text-decoration: none;
+      }
+
+      .jump-links a:hover {
+        border-color: #58a6ff;
+        color: #f0f6fc;
+      }
+
+      section {
+        padding: 48px 0;
+        border-top: 1px solid #21262d;
+      }
+
+      h2,
+      h3 {
+        color: #f0f6fc;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.7rem;
+        letter-spacing: -0.02em;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 1rem;
+      }
+
+      p {
+        color: #8b949e;
+        line-height: 1.65;
+      }
+
+      .playground-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        overflow: hidden;
+        border: 1px solid #30363d;
+        border-radius: 10px;
+        background: #010409;
+      }
+
+      .pane {
+        min-width: 0;
+      }
+
+      .pane + .pane {
+        border-left: 1px solid #30363d;
+      }
+
+      .pane-label {
+        display: block;
+        padding: 9px 12px;
+        border-bottom: 1px solid #30363d;
+        background: #161b22;
+        color: #8b949e;
+        font-size: 0.75rem;
+        font-weight: 650;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      textarea {
+        display: block;
+        width: 100%;
+        min-height: 310px;
+        resize: vertical;
+        border: 0;
+        outline: 0;
+        padding: 16px;
+        background: #0d1117;
+        color: #e6edf3;
+        font-size: 0.8rem;
+        line-height: 1.55;
+        tab-size: 2;
+      }
+
+      .preview {
+        min-height: 310px;
+        padding: 16px;
+        background: linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px), #0d1117;
+        background-size: 100% 24px;
+      }
+
+      .example-grid,
+      .theme-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .example-card,
+      .theme-card {
+        overflow: hidden;
+        border: 1px solid #30363d;
+        border-radius: 10px;
+        background: #0d1117;
+      }
+
+      .example-card.wide {
+        grid-column: 1 / -1;
+      }
+
+      .card-copy {
+        padding: 18px;
+      }
+
+      .card-copy p {
+        margin: 0;
+        font-size: 0.9rem;
+      }
+
+      pre {
+        overflow-x: auto;
+        margin: 0;
+        padding: 16px 18px;
+        border-top: 1px solid #30363d;
+        background: #161b22;
+        color: #e6edf3;
+        font-size: 0.78rem;
+        line-height: 1.55;
+      }
+
+      .live-example {
+        margin: 16px 18px 18px;
+      }
+
+      .feature-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .showcase {
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.24);
+      }
+
+      .custom-diff {
+        --git-diff-bg: #171328;
+        --git-diff-text-color: #e9e4ff;
+        --git-diff-border-color: #4c426d;
+        --git-diff-muted-color: #968db5;
+        --git-diff-add-text: #7de2b8;
+        --git-diff-del-text: #ff8fa3;
+        --git-diff-hunk-text: #b5a4ff;
+        --git-diff-meta-text: #f1c97a;
+        --git-diff-font-size: 13px;
+      }
+
+      .custom-diff::part(file-header) {
+        color: #d6ccff;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .theme-preview {
+        padding: 20px;
+      }
+
+      .theme-card.light {
+        border-color: #d0d7de;
+        background: #f6f8fa;
+      }
+
+      .theme-name {
+        margin: 0;
+        padding: 10px 14px;
+        border-bottom: 1px solid #30363d;
+        color: #8b949e;
+        font-size: 0.78rem;
+        font-weight: 650;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .theme-card.light .theme-name {
+        border-color: #d0d7de;
+        color: #57606a;
+      }
+
+      .api-table {
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid #30363d;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 10px;
+        text-align: left;
+      }
+
+      .api-table th,
+      .api-table td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #30363d;
+        vertical-align: top;
+      }
+
+      .api-table tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .api-table th {
+        background: #161b22;
+        color: #f0f6fc;
+        font-size: 0.78rem;
+      }
+
+      .api-table td {
+        color: #8b949e;
+        font-size: 0.88rem;
+        line-height: 1.5;
+      }
+
+      .api-table td:first-child {
+        color: #c9d1d9;
+        white-space: nowrap;
+      }
+
+      footer {
+        padding-top: 36px;
+        border-top: 1px solid #21262d;
+        color: #6e7681;
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 760px) {
+        body {
+          padding-inline: 16px;
+        }
+
+        .hero {
+          padding-top: 48px;
+        }
+
+        .playground-grid,
+        .example-grid,
+        .theme-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .pane + .pane {
+          border-top: 1px solid #30363d;
+          border-left: 0;
+        }
+
+        .api-table {
+          display: block;
+          overflow-x: auto;
+        }
+      }
+    </style>
+    <script type="module" src="/src/index.ts"></script>
+  </head>
+  <body>
+    <header class="hero">
+      <p class="eyebrow">git-elements.js</p>
+      <h1>Web components for Git output</h1>
+      <p class="lead">
+        <code>git-elements</code> is a growing set of web components for presenting Git command
+        output.
+      </p>
+
+      <nav class="jump-links" aria-label="Demo sections">
+        <a href="#playground">Playground</a>
+        <a href="#inputs">Input methods</a>
+        <a href="#changes">Change types</a>
+        <a href="#themes">Themes</a>
+        <a href="#api">API</a>
+        <a href="#styling">Styling</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="playground">
+        <h2>Try a patch</h2>
+        <p>Edit the unified diff on the left. The component updates immediately on the right.</p>
+
+        <div class="playground-grid">
+          <div class="pane">
+            <label class="pane-label" for="patch-input">Unified diff</label>
+            <textarea
+              id="patch-input"
+              spellcheck="false"
+              aria-label="Editable unified diff"
+            ></textarea>
+          </div>
+          <div class="pane">
+            <span class="pane-label">Rendered output</span>
+            <div class="preview">
+              <git-diff id="playground-output" theme="dark"></git-diff>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="inputs">
+        <h2>Input methods</h2>
+        <p>
+          Every input resolves to the same thing: uncolored unified diff text. Choose the delivery
+          method that fits where the patch already lives.
+        </p>
+
+        <div class="example-grid">
+          <article class="example-card">
+            <div class="card-copy">
+              <h3>Load from a URL</h3>
+              <p>Use <code>src</code> for a browser-accessible patch file.</p>
+            </div>
+            <pre><code>&lt;git-diff
+  src="./changes.patch"
+  theme="dark"
+&gt;&lt;/git-diff&gt;</code></pre>
+          </article>
+
+          <article class="example-card">
+            <div class="card-copy">
+              <h3>Assign from JavaScript</h3>
+              <p>Use <code>patch</code> when the diff is already in memory.</p>
+            </div>
+            <pre><code>const diff = document.querySelector("git-diff");
+
+diff.patch = rawDiffText;</code></pre>
+          </article>
+
+          <article class="example-card wide">
+            <div class="card-copy">
+              <h3>Embed plain text</h3>
+              <p>
+                A non-executable <code>text/plain</code> child keeps declarative patches beside
+                their markup. Common HTML indentation is removed.
+              </p>
+            </div>
+            <pre><code>&lt;git-diff theme="dark"&gt;
+  &lt;script type="text/plain"&gt;
+    --- a/message.txt
+    +++ b/message.txt
+    @@ -1 +1 @@
+    -Hello, world!
+    +Hello, Git Elements!
+  &lt;/script&gt;
+&lt;/git-diff&gt;</code></pre>
+
+            <git-diff class="live-example" theme="dark">
+              <script type="text/plain">
+                --- a/message.txt
+                +++ b/message.txt
+                @@ -1 +1 @@
+                -Hello, world!
+                +Hello, Git Elements!
+              </script>
+            </git-diff>
+          </article>
+        </div>
+      </section>
+
+      <section id="changes">
+        <h2>Git change types</h2>
+        <p>
+          The sample below combines regular hunks with file-level changes that do not always contain
+          line data.
+        </p>
+
+        <div class="feature-list" aria-label="Supported change types">
+          <span>Multiple files</span>
+          <span>Additions</span>
+          <span>Deletions</span>
+          <span>Renames</span>
+          <span>Copies</span>
+          <span>Mode changes</span>
+          <span>Binary files</span>
+          <span>Quoted paths</span>
+        </div>
+
+        <git-diff class="showcase" src="./sample.patch" theme="dark"></git-diff>
+      </section>
+
+      <section id="themes">
+        <h2>Light and dark</h2>
+        <p>
+          The component follows the operating-system preference by default. Set
+          <code>theme="light"</code> or <code>theme="dark"</code> when the surrounding surface has a
+          fixed theme.
+        </p>
+
+        <div class="theme-grid">
+          <article class="theme-card light">
+            <p class="theme-name">theme="light"</p>
+            <div class="theme-preview">
+              <git-diff theme="light">
+                <script type="text/plain">
+                  --- a/theme.css
+                  +++ b/theme.css
+                  @@ -1,2 +1,2 @@
+                  -color: black;
+                  -background: white;
+                  +color: white;
+                  +background: black;
+                </script>
+              </git-diff>
+            </div>
+          </article>
+
+          <article class="theme-card">
+            <p class="theme-name">theme="dark"</p>
+            <div class="theme-preview">
+              <git-diff theme="dark">
+                <script type="text/plain">
+                  --- a/theme.css
+                  +++ b/theme.css
+                  @@ -1,2 +1,2 @@
+                  -color: black;
+                  -background: white;
+                  +color: white;
+                  +background: black;
+                </script>
+              </git-diff>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="api">
+        <h2><code>&lt;git-diff&gt;</code> API</h2>
+        <p>
+          The element stays deliberately small: one source attribute, one direct-data property, one
+          parsed result, and an optional theme override.
+        </p>
+
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Kind</th>
+              <th scope="col">Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>src</code></td>
+              <td>Attribute / property</td>
+              <td>Fetch unified diff text from a URL. Changing it reloads the patch.</td>
+            </tr>
+            <tr>
+              <td><code>patch</code></td>
+              <td>JavaScript property</td>
+              <td>Set raw unified diff text directly and rerender immediately.</td>
+            </tr>
+            <tr>
+              <td><code>parsedDiffs</code></td>
+              <td>Read-only property</td>
+              <td>Inspect the parsed files, hunks, line numbers, statuses, and metadata.</td>
+            </tr>
+            <tr>
+              <td><code>theme</code></td>
+              <td>Attribute</td>
+              <td>Use <code>light</code> or <code>dark</code>; omit it for OS preference.</td>
+            </tr>
+            <tr>
+              <td><code>line-numbers</code></td>
+              <td>Boolean attribute / property</td>
+              <td>Show the old and new line-number gutters. Hidden by default.</td>
+            </tr>
+            <tr>
+              <td><code>&lt;script type="text/plain"&gt;</code></td>
+              <td>Child element</td>
+              <td>Provide an inline patch declaratively.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="styling">
+        <h2>Styling</h2>
+        <p>
+          Use CSS custom properties for the component palette and typography. For targeted changes
+          inside the shadow tree, use the exposed CSS parts.
+        </p>
+
+        <article class="example-card wide">
+          <pre><code>git-diff {
+  --git-diff-bg: #171328;
+  --git-diff-add-text: #7de2b8;
+  --git-diff-del-text: #ff8fa3;
+  --git-diff-hunk-text: #b5a4ff;
+  --git-diff-font-size: 13px;
+}
+
+git-diff::part(file-header) {
+  text-transform: uppercase;
+}</code></pre>
+
+          <git-diff class="custom-diff live-example" line-numbers>
+            <script type="text/plain">
+              --- a/palette.css
+              +++ b/palette.css
+              @@ -1,3 +1,3 @@
+               :root {
+              -  --accent: slateblue;
+              +  --accent: mediumorchid;
+               }
+            </script>
+          </git-diff>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      Built with standards-based custom elements, shadow DOM, and constructable stylesheets.
+    </footer>
+
+    <script type="module">
+      await customElements.whenDefined("git-diff");
+
+      const initialPatch = `diff --git a/src/greeting.ts b/src/greeting.ts
+index 1234567..89abcde 100644
+--- a/src/greeting.ts
++++ b/src/greeting.ts
+@@ -1,4 +1,5 @@
+-export const greeting = "Hello";
++export const greeting = "Hello, Git Elements!";
++
+ export function printGreeting() {
+   console.log(greeting);
+ }`;
+
+      const input = document.querySelector("#patch-input");
+      const output = document.querySelector("#playground-output");
+
+      input.value = initialPatch;
+      output.patch = initialPatch;
+      input.addEventListener("input", () => {
+        output.patch = input.value;
+      });
+    </script>
+  </body>
+</html>

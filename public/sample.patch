@@ -1,0 +1,48 @@
+diff --git a/src/index.ts b/src/index.ts
+index 1234567..89abcde 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,3 +1,4 @@
+ export class GitDiffElement extends HTMLElement {
+-  // Initial placeholder implementation
++  // Updated high-performance Web Component implementation
++  connectedCallback() {}
+ }
+diff --git a/old-name.txt b/new-name.txt
+similarity index 100%
+rename from old-name.txt
+rename to new-name.txt
+diff --git a/src/template.ts b/src/template-copy.ts
+similarity index 100%
+copy from src/template.ts
+copy to src/template-copy.ts
+diff --git a/docs/new-guide.md b/docs/new-guide.md
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/docs/new-guide.md
+@@ -0,0 +1,2 @@
++# New guide
++Start here.
+diff --git a/docs/legacy.md b/docs/legacy.md
+deleted file mode 100644
+index 1234567..0000000
+--- a/docs/legacy.md
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# Legacy guide
+-This guide has moved.
+diff --git a/scripts/build.sh b/scripts/build.sh
+old mode 100644
+new mode 100755
+diff --git a/public/logo.png b/public/logo.png
+new file mode 100644
+index 0000000..1234567
+Binary files /dev/null and b/public/logo.png differ
+diff --git a/docs/getting started.md b/docs/getting started.md
+index 1234567..89abcde 100644
+--- a/docs/getting started.md
++++ b/docs/getting started.md
+@@ -1 +1 @@
+-Install the old package.
++Install git-elements.

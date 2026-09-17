@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build and Compiler Outputs
+dist/
+demo-dist/
+*.tsbuildinfo
+
+# Testing & Coverage
+coverage/
+.vitest/
+
+# Logs and Debugging
+npm-debug.log*
+
+# Editor & OS Files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
