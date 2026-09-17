@@ -1,7 +1,22 @@
 {
   "name": "@erkde/git-elements",
   "version": "0.1.0",
+  "description": "Web components for presenting Git command output on the web.",
+  "keywords": [
+    "custom-elements",
+    "diff",
+    "git",
+    "web-components"
+  ],
+  "homepage": "https://erkde.github.io/git-elements.js/",
+  "bugs": {
+    "url": "https://github.com/erkde/git-elements.js/issues"
+  },
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erkde/git-elements.js.git"
+  },
   "files": [
     "dist"
   ],
@@ -32,6 +47,7 @@
     "check-types": "tsc --noEmit",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
+    "prepublishOnly": "npm test && npm run build",
     "preview": "npm run build:demo && vite preview",
     "test": "vitest run",
     "test:watch": "vitest"
