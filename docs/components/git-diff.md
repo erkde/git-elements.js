@@ -103,25 +103,7 @@ attribute or `lineNumbers` property:
 
 ## API
 
-### Attributes and properties
-
-| Name           | Kind                         | Purpose                                                  |
-| -------------- | ---------------------------- | -------------------------------------------------------- |
-| `src`          | Attribute / property         | Fetch unified diff text from a URL.                      |
-| `patch`        | JavaScript property          | Set raw unified diff text directly and rerender.         |
-| `parsedDiffs`  | Read-only property           | Inspect parsed files, hunks, line numbers, and metadata. |
-| `line-numbers` | Boolean attribute / property | Show old and new line-number gutters.                    |
-| `theme`        | Attribute                    | Use `light` or `dark`; omit it for OS preference.        |
-| `<script>`     | Child element                | Provide an inline patch with `type="text/plain"`.        |
-
-### Slots and events
-
-| Name      | Kind       | Purpose                                                                    |
-| --------- | ---------- | -------------------------------------------------------------------------- |
-| `loading` | Named slot | Content shown when a `src` request takes longer than the configured delay. |
-| `error`   | Named slot | Content shown when a `src` request fails.                                  |
-| `load`    | Event      | Fires after a `src` patch has loaded and rendered.                         |
-| `error`   | Event      | Fires when a `src` patch cannot be loaded.                                 |
+<!--@include: ./_generated/git-diff-api.md-->
 
 See [loading and caching](/guides/loading-and-caching) and [styling](/guides/styling) for the shared
 component conventions.

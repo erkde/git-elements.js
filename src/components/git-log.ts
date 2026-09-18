@@ -7,6 +7,46 @@ import {
 
 const DEFAULT_MAX_COUNT = 30;
 
+/**
+ * Render commit history from a public GitHub, GitLab.com, or Bitbucket Cloud repository.
+ *
+ * @attr {string} repository - Public repository URL.
+ * @attr {string} revisions - Branch, tag, commit ID, or two-dot or three-dot revision set.
+ * @attr {number} max-count - Maximum number of commits to display, from 1 to 100.
+ * @attr {boolean} left-right - Mark each side of a symmetric three-dot revision set.
+ * @attr {"light" | "dark"} theme - Override the operating-system color preference.
+ *
+ * @slot loading - Content shown when loading exceeds the configured delay.
+ * @slot error - Content shown when repository history cannot be loaded.
+ *
+ * @fires {Event} load - Fired after repository history loads and renders.
+ * @fires {Event} error - Fired when repository history cannot be loaded.
+ *
+ * @cssprop [--git-log-bg=#f5f5f4] - Component background color.
+ * @cssprop [--git-log-text-color=#292524] - Primary text color.
+ * @cssprop [--git-log-border-color=#d6d3d1] - Border color.
+ * @cssprop [--git-log-muted-color=#78716c] - Muted author, date, and side-marker color.
+ * @cssprop [--git-log-link-color=#006d8f] - Commit hash link color.
+ * @cssprop [--git-log-left-color=#b4232c] - Left revision marker color.
+ * @cssprop [--git-log-right-color=#167044] - Right revision marker color.
+ * @cssprop [--git-log-hover-bg=rgba(41, 37, 36, 0.045)] - Commit hover background.
+ * @cssprop [--git-log-font-family=ui-monospace, monospace] - Component font family.
+ * @cssprop [--git-log-font-size=12px] - Component font size.
+ * @cssprop [--git-log-line-height=20px] - Commit line height.
+ * @cssprop [--git-log-loading-delay=150ms] - Delay before slotted loading content appears.
+ *
+ * @csspart list - Ordered list containing the commits.
+ * @csspart commit - A rendered commit.
+ * @csspart side - Revision-side marker.
+ * @csspart side-left - Marker for a commit unique to the left revision.
+ * @csspart side-right - Marker for a commit unique to the right revision.
+ * @csspart hash - Abbreviated commit hash.
+ * @csspart message - First line of the commit message.
+ * @csspart author - Commit author name.
+ * @csspart date - Committer date.
+ * @csspart loading - Loading-state container.
+ * @csspart error - Error-state container.
+ */
 export class GitLogElement extends HTMLElement {
   static observedAttributes = ["repository", "revisions", "max-count", "left-right"];
 
@@ -47,6 +87,7 @@ export class GitLogElement extends HTMLElement {
     void this.load();
   }
 
+  /** Public repository URL used to load commit history. */
   get repository(): string {
     return this.getAttribute("repository") ?? "";
   }
@@ -59,6 +100,7 @@ export class GitLogElement extends HTMLElement {
     }
   }
 
+  /** Branch, tag, commit ID, or two-dot or three-dot revision set. */
   get revisions(): string {
     return this.getAttribute("revisions") ?? "";
   }
@@ -71,6 +113,7 @@ export class GitLogElement extends HTMLElement {
     }
   }
 
+  /** Maximum number of commits to display, from 1 to 100. */
   get maxCount(): number {
     const value = Number(this.getAttribute("max-count") ?? DEFAULT_MAX_COUNT);
     return Number.isInteger(value) && value >= 1 && value <= 100 ? value : DEFAULT_MAX_COUNT;
@@ -83,6 +126,7 @@ export class GitLogElement extends HTMLElement {
     this.setAttribute("max-count", String(value));
   }
 
+  /** Whether symmetric three-dot results identify their revision side. */
   get leftRight(): boolean {
     return this.hasAttribute("left-right");
   }
@@ -91,10 +135,12 @@ export class GitLogElement extends HTMLElement {
     this.toggleAttribute("left-right", value);
   }
 
+  /** Normalized commits currently displayed by the element. */
   get commits(): readonly GitLogCommit[] {
     return this._commits;
   }
 
+  /** Bypass cached data and request the log again. */
   async reload(): Promise<void> {
     await this.load(true);
   }

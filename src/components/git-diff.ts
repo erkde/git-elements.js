@@ -1,6 +1,61 @@
 import { parseDiff, type ParsedDiff, type DiffLine } from "../lib/diff-parser.js";
 import { gitDiffStyleSheet } from "./git-diff.css.js";
 
+/**
+ * Render uncolored unified diff text as an accessible, themeable file-by-file view.
+ *
+ * @attr {string} src - Browser-accessible URL of a unified diff to fetch and render.
+ * @attr {boolean} line-numbers - Show old and new line-number gutters.
+ * @attr {"light" | "dark"} theme - Override the operating-system color preference.
+ *
+ * @slot loading - Content shown when a `src` request exceeds the loading delay.
+ * @slot error - Content shown when a `src` request fails.
+ *
+ * @fires {Event} load - Fired after a `src` patch has loaded and rendered.
+ * @fires {Event} error - Fired when a `src` patch cannot be loaded.
+ *
+ * @cssprop [--git-diff-bg=#f5f5f4] - Component background color.
+ * @cssprop [--git-diff-text-color=#292524] - Primary text color.
+ * @cssprop [--git-diff-border-color=#d6d3d1] - Separator and gutter border color.
+ * @cssprop [--git-diff-muted-color=#78716c] - Muted metadata and line-number color.
+ * @cssprop [--git-diff-add-text=#167044] - Added-line text color.
+ * @cssprop [--git-diff-del-text=#b4232c] - Deleted-line text color.
+ * @cssprop [--git-diff-hunk-text=#006d8f] - Hunk-header text color.
+ * @cssprop [--git-diff-meta-text=#806000] - File metadata and status color.
+ * @cssprop [--git-diff-hover-bg=rgba(41, 37, 36, 0.045)] - Line hover background.
+ * @cssprop [--git-diff-font-family=ui-monospace, monospace] - Component font family.
+ * @cssprop [--git-diff-font-size=12px] - Component font size.
+ * @cssprop [--git-diff-line-height=20px] - Diff line height.
+ * @cssprop [--git-diff-loading-delay=150ms] - Delay before slotted loading content appears.
+ *
+ * @csspart container - Container for the rendered file diffs.
+ * @csspart loading - Loading-state container.
+ * @csspart error - Error-state container.
+ * @csspart file - A rendered file diff.
+ * @csspart file-modified - A modified file diff.
+ * @csspart file-added - An added file diff.
+ * @csspart file-deleted - A deleted file diff.
+ * @csspart file-renamed - A renamed file diff.
+ * @csspart file-copied - A copied file diff.
+ * @csspart file-header - Header containing a file path and optional status.
+ * @csspart file-path - Displayed file path.
+ * @csspart status - File status label.
+ * @csspart status-added - Added-file status label.
+ * @csspart status-deleted - Deleted-file status label.
+ * @csspart status-renamed - Renamed-file status label.
+ * @csspart status-copied - Copied-file status label.
+ * @csspart file-meta - File mode, similarity, or binary metadata.
+ * @csspart table - Table containing diff hunks and lines.
+ * @csspart row - A diff row.
+ * @csspart row-context - An unchanged context row.
+ * @csspart row-addition - An added line row.
+ * @csspart row-deletion - A deleted line row.
+ * @csspart hunk-header - A hunk header row.
+ * @csspart line-num - An old or new line-number cell.
+ * @csspart old-line-num - An old line-number cell.
+ * @csspart new-line-num - A new line-number cell.
+ * @csspart content - A diff-content cell.
+ */
 export class GitDiffElement extends HTMLElement {
   static observedAttributes = ["src"];
 
@@ -71,6 +126,7 @@ export class GitDiffElement extends HTMLElement {
     void this.loadSource(newValue);
   }
 
+  /** URL of the unified diff loaded by the element. */
   get src(): string {
     return this.getAttribute("src") ?? "";
   }
@@ -83,6 +139,7 @@ export class GitDiffElement extends HTMLElement {
     }
   }
 
+  /** Whether old and new line-number gutters are shown. */
   get lineNumbers(): boolean {
     return this.hasAttribute("line-numbers");
   }
@@ -91,6 +148,7 @@ export class GitDiffElement extends HTMLElement {
     this.toggleAttribute("line-numbers", value);
   }
 
+  /** Raw unified diff text currently rendered by the element. */
   get patch(): string {
     return this._patch;
   }
@@ -109,6 +167,7 @@ export class GitDiffElement extends HTMLElement {
     this.render();
   }
 
+  /** Parsed files, hunks, line numbers, and metadata for the current patch. */
   get parsedDiffs(): ParsedDiff[] {
     return this._parsedDiffs;
   }

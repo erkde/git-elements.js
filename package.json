@@ -18,7 +18,8 @@
     "url": "https://github.com/erkde/git-elements.js.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "custom-elements.json"
   ],
   "type": "module",
   "sideEffects": [
@@ -39,24 +40,28 @@
     "./components/git-log": {
       "types": "./dist/components/git-log.d.ts",
       "import": "./dist/components/git-log.js"
-    }
+    },
+    "./custom-elements.json": "./custom-elements.json"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "npm run format:check && tsup && tsc -p tsconfig.build.json",
-    "build:demo": "vitepress build docs",
+    "dev": "npm run docs:api && vitepress dev docs",
+    "build": "npm run docs:api && npm run format:check && tsup && tsc -p tsconfig.build.json",
+    "build:demo": "npm run docs:api && vitepress build docs",
     "check-types": "tsc --noEmit",
+    "docs:api": "npm run analyze && node scripts/generate-api-docs.mjs",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
+    "analyze": "cem analyze",
     "prepublishOnly": "npm test && npm run build",
     "preview": "npm run build:demo && vitepress preview docs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.11.0",
     "happy-dom": "^20.14.5",
     "oxfmt": "^0.68.0",
     "tsup": "^8.0.0",
@@ -64,5 +69,6 @@
     "vite": "^8.3.0",
     "vitepress": "2.0.0-alpha.20",
     "vitest": "^5.0.1"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

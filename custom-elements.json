@@ -1,0 +1,923 @@
+{
+  "schemaVersion": "1.0.0",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "dist/index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "git-diff",
+          "declaration": {
+            "name": "GitDiffElement",
+            "module": "dist/components/git-diff.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "git-log",
+          "declaration": {
+            "name": "GitLogElement",
+            "module": "dist/components/git-log.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GitDiffElement",
+          "declaration": {
+            "name": "GitDiffElement",
+            "module": "dist/components/git-diff.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GitLogElement",
+          "declaration": {
+            "name": "GitLogElement",
+            "module": "dist/components/git-log.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GitLogCommit",
+          "declaration": {
+            "name": "GitLogCommit",
+            "module": "dist/components/git-log.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/git-diff.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Render uncolored unified diff text as an accessible, themeable file-by-file view.",
+          "name": "GitDiffElement",
+          "cssProperties": [
+            {
+              "description": "Component background color.",
+              "name": "--git-diff-bg",
+              "default": "#f5f5f4"
+            },
+            {
+              "description": "Primary text color.",
+              "name": "--git-diff-text-color",
+              "default": "#292524"
+            },
+            {
+              "description": "Separator and gutter border color.",
+              "name": "--git-diff-border-color",
+              "default": "#d6d3d1"
+            },
+            {
+              "description": "Muted metadata and line-number color.",
+              "name": "--git-diff-muted-color",
+              "default": "#78716c"
+            },
+            {
+              "description": "Added-line text color.",
+              "name": "--git-diff-add-text",
+              "default": "#167044"
+            },
+            {
+              "description": "Deleted-line text color.",
+              "name": "--git-diff-del-text",
+              "default": "#b4232c"
+            },
+            {
+              "description": "Hunk-header text color.",
+              "name": "--git-diff-hunk-text",
+              "default": "#006d8f"
+            },
+            {
+              "description": "File metadata and status color.",
+              "name": "--git-diff-meta-text",
+              "default": "#806000"
+            },
+            {
+              "description": "Line hover background.",
+              "name": "--git-diff-hover-bg",
+              "default": "rgba(41, 37, 36, 0.045)"
+            },
+            {
+              "description": "Component font family.",
+              "name": "--git-diff-font-family",
+              "default": "ui-monospace, monospace"
+            },
+            {
+              "description": "Component font size.",
+              "name": "--git-diff-font-size",
+              "default": "12px"
+            },
+            {
+              "description": "Diff line height.",
+              "name": "--git-diff-line-height",
+              "default": "20px"
+            },
+            {
+              "description": "Delay before slotted loading content appears.",
+              "name": "--git-diff-loading-delay",
+              "default": "150ms"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "Container for the rendered file diffs.",
+              "name": "container"
+            },
+            {
+              "description": "Loading-state container.",
+              "name": "loading"
+            },
+            {
+              "description": "Error-state container.",
+              "name": "error"
+            },
+            {
+              "description": "A rendered file diff.",
+              "name": "file"
+            },
+            {
+              "description": "A modified file diff.",
+              "name": "file-modified"
+            },
+            {
+              "description": "An added file diff.",
+              "name": "file-added"
+            },
+            {
+              "description": "A deleted file diff.",
+              "name": "file-deleted"
+            },
+            {
+              "description": "A renamed file diff.",
+              "name": "file-renamed"
+            },
+            {
+              "description": "A copied file diff.",
+              "name": "file-copied"
+            },
+            {
+              "description": "Header containing a file path and optional status.",
+              "name": "file-header"
+            },
+            {
+              "description": "Displayed file path.",
+              "name": "file-path"
+            },
+            {
+              "description": "File status label.",
+              "name": "status"
+            },
+            {
+              "description": "Added-file status label.",
+              "name": "status-added"
+            },
+            {
+              "description": "Deleted-file status label.",
+              "name": "status-deleted"
+            },
+            {
+              "description": "Renamed-file status label.",
+              "name": "status-renamed"
+            },
+            {
+              "description": "Copied-file status label.",
+              "name": "status-copied"
+            },
+            {
+              "description": "File mode, similarity, or binary metadata.",
+              "name": "file-meta"
+            },
+            {
+              "description": "Table containing diff hunks and lines.",
+              "name": "table"
+            },
+            {
+              "description": "A diff row.",
+              "name": "row"
+            },
+            {
+              "description": "An unchanged context row.",
+              "name": "row-context"
+            },
+            {
+              "description": "An added line row.",
+              "name": "row-addition"
+            },
+            {
+              "description": "A deleted line row.",
+              "name": "row-deletion"
+            },
+            {
+              "description": "A hunk header row.",
+              "name": "hunk-header"
+            },
+            {
+              "description": "An old or new line-number cell.",
+              "name": "line-num"
+            },
+            {
+              "description": "An old line-number cell.",
+              "name": "old-line-num"
+            },
+            {
+              "description": "A new line-number cell.",
+              "name": "new-line-num"
+            },
+            {
+              "description": "A diff-content cell.",
+              "name": "content"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Content shown when a `src` request exceeds the loading delay.",
+              "name": "loading"
+            },
+            {
+              "description": "Content shown when a `src` request fails.",
+              "name": "error"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_patch",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_parsedDiffs",
+              "type": {
+                "text": "ParsedDiff[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_container",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_loadingState",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_errorState",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_sourceRequest",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_inlinePatchObserver",
+              "type": {
+                "text": "MutationObserver"
+              },
+              "privacy": "private",
+              "default": "new MutationObserver(() => { if (!this.src) { this.loadInlinePatch(); } })"
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL of the unified diff loaded by the element."
+            },
+            {
+              "kind": "field",
+              "name": "lineNumbers",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether old and new line-number gutters are shown."
+            },
+            {
+              "kind": "field",
+              "name": "patch",
+              "type": {
+                "text": "string"
+              },
+              "description": "Raw unified diff text currently rendered by the element."
+            },
+            {
+              "kind": "method",
+              "name": "setPatch",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "parsedDiffs",
+              "type": {
+                "text": "ParsedDiff[]"
+              },
+              "description": "Parsed files, hunks, line numbers, and metadata for the current patch.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "loadInlinePatch",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "readInlinePatch",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "content",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "loadSource",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "src",
+                  "default": "this.src"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "createResourceState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "\"loading\" | \"error\""
+                  }
+                },
+                {
+                  "name": "role",
+                  "type": {
+                    "text": "\"status\" | \"alert\""
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "showResourceState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "\"loading\" | \"error\" | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createLineRow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTableRowElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "line",
+                  "type": {
+                    "text": "DiffLine"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[gitDiffStyleSheet]"
+            }
+          ],
+          "events": [
+            {
+              "name": "load",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired after a `src` patch has loaded and rendered."
+            },
+            {
+              "name": "error",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired when a `src` patch cannot be loaded."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Browser-accessible URL of a unified diff to fetch and render."
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show old and new line-number gutters.",
+              "name": "line-numbers"
+            },
+            {
+              "type": {
+                "text": "\"light\" | \"dark\""
+              },
+              "description": "Override the operating-system color preference.",
+              "name": "theme"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "git-diff",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GitDiffElement",
+          "declaration": {
+            "name": "GitDiffElement",
+            "module": "dist/components/git-diff.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/git-log.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Render commit history from a public GitHub, GitLab.com, or Bitbucket Cloud repository.",
+          "name": "GitLogElement",
+          "cssProperties": [
+            {
+              "description": "Component background color.",
+              "name": "--git-log-bg",
+              "default": "#f5f5f4"
+            },
+            {
+              "description": "Primary text color.",
+              "name": "--git-log-text-color",
+              "default": "#292524"
+            },
+            {
+              "description": "Border color.",
+              "name": "--git-log-border-color",
+              "default": "#d6d3d1"
+            },
+            {
+              "description": "Muted author, date, and side-marker color.",
+              "name": "--git-log-muted-color",
+              "default": "#78716c"
+            },
+            {
+              "description": "Commit hash link color.",
+              "name": "--git-log-link-color",
+              "default": "#006d8f"
+            },
+            {
+              "description": "Left revision marker color.",
+              "name": "--git-log-left-color",
+              "default": "#b4232c"
+            },
+            {
+              "description": "Right revision marker color.",
+              "name": "--git-log-right-color",
+              "default": "#167044"
+            },
+            {
+              "description": "Commit hover background.",
+              "name": "--git-log-hover-bg",
+              "default": "rgba(41, 37, 36, 0.045)"
+            },
+            {
+              "description": "Component font family.",
+              "name": "--git-log-font-family",
+              "default": "ui-monospace, monospace"
+            },
+            {
+              "description": "Component font size.",
+              "name": "--git-log-font-size",
+              "default": "12px"
+            },
+            {
+              "description": "Commit line height.",
+              "name": "--git-log-line-height",
+              "default": "20px"
+            },
+            {
+              "description": "Delay before slotted loading content appears.",
+              "name": "--git-log-loading-delay",
+              "default": "150ms"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "Ordered list containing the commits.",
+              "name": "list"
+            },
+            {
+              "description": "A rendered commit.",
+              "name": "commit"
+            },
+            {
+              "description": "Revision-side marker.",
+              "name": "side"
+            },
+            {
+              "description": "Marker for a commit unique to the left revision.",
+              "name": "side-left"
+            },
+            {
+              "description": "Marker for a commit unique to the right revision.",
+              "name": "side-right"
+            },
+            {
+              "description": "Abbreviated commit hash.",
+              "name": "hash"
+            },
+            {
+              "description": "First line of the commit message.",
+              "name": "message"
+            },
+            {
+              "description": "Commit author name.",
+              "name": "author"
+            },
+            {
+              "description": "Committer date.",
+              "name": "date"
+            },
+            {
+              "description": "Loading-state container.",
+              "name": "loading"
+            },
+            {
+              "description": "Error-state container.",
+              "name": "error"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Content shown when loading exceeds the configured delay.",
+              "name": "loading"
+            },
+            {
+              "description": "Content shown when repository history cannot be loaded.",
+              "name": "error"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_commits",
+              "type": {
+                "text": "GitLogCommit[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_container",
+              "type": {
+                "text": "HTMLOListElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_loadingState",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_errorState",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_sourceRequest",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "repository",
+              "type": {
+                "text": "string"
+              },
+              "description": "Public repository URL used to load commit history."
+            },
+            {
+              "kind": "field",
+              "name": "revisions",
+              "type": {
+                "text": "string"
+              },
+              "description": "Branch, tag, commit ID, or two-dot or three-dot revision set."
+            },
+            {
+              "kind": "field",
+              "name": "maxCount",
+              "type": {
+                "text": "number"
+              },
+              "description": "Maximum number of commits to display, from 1 to 100."
+            },
+            {
+              "kind": "field",
+              "name": "leftRight",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether symmetric three-dot results identify their revision side."
+            },
+            {
+              "kind": "field",
+              "name": "commits",
+              "type": {
+                "text": "readonly GitLogCommit[]"
+              },
+              "description": "Normalized commits currently displayed by the element.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "reload",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "description": "Bypass cached data and request the log again."
+            },
+            {
+              "kind": "method",
+              "name": "load",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "reload",
+                  "default": "false"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "createResourceState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "\"loading\" | \"error\""
+                  }
+                },
+                {
+                  "name": "role",
+                  "type": {
+                    "text": "\"status\" | \"alert\""
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "showResourceState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "\"loading\" | \"error\" | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[gitLogStyleSheet]"
+            },
+            {
+              "kind": "field",
+              "name": "className",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"commit-list\""
+            }
+          ],
+          "events": [
+            {
+              "name": "load",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired after repository history loads and renders."
+            },
+            {
+              "name": "error",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired when repository history cannot be loaded."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "repository",
+              "type": {
+                "text": "string"
+              },
+              "description": "Public repository URL."
+            },
+            {
+              "name": "revisions",
+              "type": {
+                "text": "string"
+              },
+              "description": "Branch, tag, commit ID, or two-dot or three-dot revision set."
+            },
+            {
+              "name": "max-count",
+              "type": {
+                "text": "number"
+              },
+              "description": "Maximum number of commits to display, from 1 to 100."
+            },
+            {
+              "name": "left-right",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Mark each side of a symmetric three-dot revision set."
+            },
+            {
+              "type": {
+                "text": "\"light\" | \"dark\""
+              },
+              "description": "Override the operating-system color preference.",
+              "name": "theme"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "git-log",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GitLogElement",
+          "declaration": {
+            "name": "GitLogElement",
+            "module": "dist/components/git-log.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GitLogCommit",
+          "declaration": {
+            "name": "GitLogCommit",
+            "module": "../lib/repository-log.js"
+          }
+        }
+      ]
+    }
+  ]
+}

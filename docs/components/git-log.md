@@ -62,26 +62,7 @@ local-only names such as `HEAD`, `origin/main`, reflog expressions, or unpushed 
 
 ## API
 
-### Attributes and properties
-
-| Name         | Kind                         | Purpose                                                   |
-| ------------ | ---------------------------- | --------------------------------------------------------- |
-| `repository` | Attribute / property         | Set the public repository URL.                            |
-| `revisions`  | Attribute / property         | Select a branch, tag, commit ID, or revision range.       |
-| `max-count`  | Attribute / property         | Limit the result to between 1 and 100 commits.            |
-| `left-right` | Boolean attribute / property | Mark each side of a symmetric three-dot log.              |
-| `commits`    | Read-only property           | Inspect the normalized commits currently being displayed. |
-| `theme`      | Attribute                    | Use `light` or `dark`; omit it for OS preference.         |
-
-### Methods, slots, and events
-
-| Name       | Kind       | Purpose                                                  |
-| ---------- | ---------- | -------------------------------------------------------- |
-| `reload()` | Method     | Bypass cached data and request the log again.            |
-| `loading`  | Named slot | Content shown when loading exceeds the configured delay. |
-| `error`    | Named slot | Content shown when repository history cannot be loaded.  |
-| `load`     | Event      | Fires after repository history loads and renders.        |
-| `error`    | Event      | Fires when repository history cannot be loaded.          |
+<!--@include: ./_generated/git-log-api.md-->
 
 See [loading and caching](/guides/loading-and-caching) for request sharing and cache behavior, and
 [styling](/guides/styling) for custom properties and CSS parts.
