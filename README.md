@@ -2,6 +2,8 @@
 
 Web components for presenting Git command output on the web.
 
+[Documentation and live examples](https://erkde.github.io/git-elements.js/)
+
 ## Components
 
 - [`<git-diff>`](#git-diff) renders unified diff text from a URL, inline markup, or JavaScript.

@@ -45,14 +45,14 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vitepress dev docs",
     "build": "npm run format:check && tsup && tsc -p tsconfig.build.json",
-    "build:demo": "vite build",
+    "build:demo": "vitepress build docs",
     "check-types": "tsc --noEmit",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
     "prepublishOnly": "npm test && npm run build",
-    "preview": "npm run build:demo && vite preview",
+    "preview": "npm run build:demo && vitepress preview docs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -62,6 +62,7 @@
     "tsup": "^8.0.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.0",
+    "vitepress": "2.0.0-alpha.20",
     "vitest": "^5.0.1"
   }
 }

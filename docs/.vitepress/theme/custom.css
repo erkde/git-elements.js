@@ -1,0 +1,65 @@
+:root {
+  --vp-c-brand-1: #167044;
+  --vp-c-brand-2: #0e5935;
+  --vp-c-brand-3: #0a4328;
+  --vp-c-brand-soft: rgba(22, 112, 68, 0.14);
+}
+
+.dark {
+  --vp-c-brand-1: #68d391;
+  --vp-c-brand-2: #48b779;
+  --vp-c-brand-3: #329b64;
+  --vp-c-brand-soft: rgba(104, 211, 145, 0.14);
+}
+
+.VPHomeHero .name,
+.VPHomeHero .text {
+  max-width: 760px;
+}
+
+.vp-doc git-diff,
+.vp-doc git-log {
+  margin: 20px 0;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.demo-frame {
+  margin: 20px 0;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: var(--vp-c-bg-soft);
+}
+
+.demo-frame git-diff,
+.demo-frame git-log {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.vp-doc .playground + .custom-block.details {
+  margin-top: 24px;
+}
+
+.vp-doc .playground + .custom-block.details summary {
+  font-weight: 400;
+}
+
+.resource-message {
+  display: block;
+  padding: 12px;
+  color: var(--vp-c-text-2);
+  font: 13px/1.5 var(--vp-font-family-mono);
+}
+
+.vp-doc table {
+  display: table;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .vp-doc table {
+    display: block;
+  }
+}

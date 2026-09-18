@@ -4,6 +4,7 @@ node_modules/
 # Build and Compiler Outputs
 dist/
 demo-dist/
+docs/.vitepress/cache/
 *.tsbuildinfo
 
 # Testing & Coverage
