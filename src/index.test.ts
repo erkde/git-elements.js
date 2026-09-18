@@ -6,4 +6,8 @@ describe("Auto-registration", () => {
   it("registers <git-diff> in customElements registry", () => {
     expect(customElements.get("git-diff")).toBeDefined();
   });
+
+  it("registers <git-log> in customElements registry", () => {
+    expect(customElements.get("git-log")).toBeDefined();
+  });
 });

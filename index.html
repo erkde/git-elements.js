@@ -362,10 +362,12 @@
 
       <nav class="jump-links" aria-label="Demo sections">
         <a href="#playground">Playground</a>
+        <a href="#history">Repository log</a>
         <a href="#inputs">Input methods</a>
         <a href="#changes">Change types</a>
         <a href="#themes">Themes</a>
-        <a href="#api">API</a>
+        <a href="#git-diff-api">Diff API</a>
+        <a href="#git-log-api">Log API</a>
         <a href="#lifecycle">Lifecycle</a>
         <a href="#styling">Styling</a>
       </nav>
@@ -391,6 +393,60 @@
               <git-diff id="playground-output" theme="dark"></git-diff>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="history">
+        <h2>Repository history</h2>
+        <p>
+          These live examples read the public history of
+          <a href="https://github.com/erkde/git-elements.js">git-elements.js</a>. Successful
+          responses are cached in the browser, so revisiting the page does not repeatedly spend the
+          provider's API allowance.
+        </p>
+
+        <div class="example-grid">
+          <article class="example-card">
+            <div class="card-copy">
+              <h3>A branch</h3>
+              <p>Show the latest commits reachable from <code>main</code>.</p>
+            </div>
+            <pre><code>&lt;git-log
+  repository="https://github.com/erkde/git-elements.js"
+  revisions="main"
+  max-count="6"
+&gt;&lt;/git-log&gt;</code></pre>
+            <git-log
+              class="live-example"
+              repository="https://github.com/erkde/git-elements.js"
+              revisions="main"
+              max-count="6"
+              theme="dark"
+            >
+              <span slot="loading">Loading repository history…</span>
+              <span slot="error">Repository history is unavailable.</span>
+            </git-log>
+          </article>
+
+          <article class="example-card">
+            <div class="card-copy">
+              <h3>A two-dot range</h3>
+              <p>Show the commits added between two published releases.</p>
+            </div>
+            <pre><code>&lt;git-log
+  repository="https://github.com/erkde/git-elements.js"
+  revisions="v0.1.0..v0.1.1"
+&gt;&lt;/git-log&gt;</code></pre>
+            <git-log
+              class="live-example"
+              repository="https://github.com/erkde/git-elements.js"
+              revisions="v0.1.0..v0.1.1"
+              theme="dark"
+            >
+              <span slot="loading">Loading release history…</span>
+              <span slot="error">Release history is unavailable.</span>
+            </git-log>
+          </article>
         </div>
       </section>
 
@@ -520,7 +576,7 @@ diff.patch = rawDiffText;</code></pre>
         </div>
       </section>
 
-      <section id="api">
+      <section id="git-diff-api">
         <h2><code>&lt;git-diff&gt;</code> API</h2>
         <p>
           The element stays deliberately small, with URL, property, and inline inputs plus
@@ -587,6 +643,74 @@ diff.patch = rawDiffText;</code></pre>
               <td><code>error</code></td>
               <td>Event</td>
               <td>Fires when a <code>src</code> patch cannot be loaded.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="git-log-api">
+        <h2><code>&lt;git-log&gt;</code> API</h2>
+        <p>
+          Load branch, tag, commit, or range history from a public GitHub, GitLab.com, or Bitbucket
+          Cloud repository.
+        </p>
+
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Kind</th>
+              <th scope="col">Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>repository</code></td>
+              <td>Attribute / property</td>
+              <td>Set the public repository URL.</td>
+            </tr>
+            <tr>
+              <td><code>revisions</code></td>
+              <td>Attribute / property</td>
+              <td>
+                Select a branch, tag, or full commit ID, or use a two-dot or three-dot revision
+                range.
+              </td>
+            </tr>
+            <tr>
+              <td><code>max-count</code></td>
+              <td>Attribute / property</td>
+              <td>Limit the result to between 1 and 100 commits. Defaults to 30.</td>
+            </tr>
+            <tr>
+              <td><code>left-right</code></td>
+              <td>Boolean attribute / property</td>
+              <td>Mark the side of each commit in a symmetric three-dot log.</td>
+            </tr>
+            <tr>
+              <td><code>commits</code></td>
+              <td>Read-only property</td>
+              <td>Inspect the normalized commits currently being displayed.</td>
+            </tr>
+            <tr>
+              <td><code>reload()</code></td>
+              <td>Method</td>
+              <td>Bypass cached data and request the log again.</td>
+            </tr>
+            <tr>
+              <td><code>slot="loading"</code></td>
+              <td>Named slot</td>
+              <td>Optional content shown when loading takes longer than 150ms.</td>
+            </tr>
+            <tr>
+              <td><code>slot="error"</code></td>
+              <td>Named slot</td>
+              <td>Optional content shown when repository history cannot be loaded.</td>
+            </tr>
+            <tr>
+              <td><code>load</code> / <code>error</code></td>
+              <td>Events</td>
+              <td>Signal whether repository history loaded or failed.</td>
             </tr>
           </tbody>
         </table>

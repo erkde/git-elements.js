@@ -35,6 +35,10 @@
     "./components/git-diff": {
       "types": "./dist/components/git-diff.d.ts",
       "import": "./dist/components/git-diff.js"
+    },
+    "./components/git-log": {
+      "types": "./dist/components/git-log.d.ts",
+      "import": "./dist/components/git-log.js"
     }
   },
   "publishConfig": {
