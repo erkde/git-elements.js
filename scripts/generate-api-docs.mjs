@@ -6,7 +6,7 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = readJson("custom-elements.json");
 const packageJson = readJson("package.json");
 
-for (const tagName of ["git-diff", "git-log"]) {
+for (const tagName of ["git-diff", "git-log", "git-show"]) {
   const { declaration, module } = findDeclaration(tagName);
   const markdown = renderApi(tagName, declaration, module);
   const outputPath = resolve(projectRoot, `docs/components/_generated/${tagName}-api.md`);

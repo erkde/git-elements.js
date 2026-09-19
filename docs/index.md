@@ -22,8 +22,8 @@ features:
     details: Load branches, tags, commits, and revision ranges from public hosted repositories.
     link: /components/git-log
     linkText: Explore git-log
-  - title: Standards based
-    details: Native custom elements, shadow DOM, CSS custom properties, parts, slots, and events.
-    link: /guides/styling
-    linkText: Customize the elements
+  - title: "&lt;git-show&gt;"
+    details: Present one hosted commit together with the patch it introduced.
+    link: /components/git-show
+    linkText: Explore git-show
 ---

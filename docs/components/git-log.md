@@ -5,6 +5,7 @@ import GitLogDemo from '../.vitepress/theme/components/GitLogDemo.vue'
 # `<git-log>`
 
 Render commit history from a public GitHub, GitLab.com, or Bitbucket Cloud repository.
+See [supported Git hosts](/getting-started#supported-git-hosts) for accepted repository URL formats.
 
 ## Branch history
 

@@ -21,12 +21,19 @@ default. Supply named slots when the page needs visible loading or error content
 </git-log>
 ```
 
+```html
+<git-show repository="https://github.com/erkde/git-elements.js" revision="v0.1.1">
+  <span slot="loading">Loading commit…</span>
+  <span slot="error">Commit unavailable.</span>
+</git-show>
+```
+
 Loading content appears after 150ms by default to avoid flicker on fast requests. Adjust the delay
-with `--git-diff-loading-delay` or `--git-log-loading-delay`.
+with `--git-diff-loading-delay`, `--git-log-loading-delay`, or `--git-show-loading-delay`.
 
 ## Events
 
-Both elements dispatch `load` after an external resource has loaded and rendered, or `error` when
+All three elements dispatch `load` after an external resource has loaded and rendered, or `error` when
 the request fails:
 
 ```js
@@ -43,17 +50,19 @@ log.addEventListener("error", () => {
 
 ## Repository cache
 
-`<git-log>` shares identical in-flight requests. Successful responses are stored in the browser's
-Cache Storage when it is available, keeping them outside the page's JavaScript heap.
+Within each component type, identical `<git-log>` or `<git-show>` instances share in-flight requests.
+Successful responses are stored in separate browser Cache Storage entries when it is available,
+keeping them outside the page's JavaScript heap.
 
-Logs beginning from mutable names such as branches and tags are reused for one hour. Requests whose
-revisions are all full object IDs are immutable and do not expire. The browser may evict either
-kind under its normal storage policy.
+Logs and shows beginning from mutable names such as branches and tags are reused for one hour.
+Requests whose revisions are all full object IDs are immutable and do not expire. The browser may
+evict either kind under its normal storage policy.
 
 Call `reload()` when the user explicitly asks for fresh repository data:
 
 ```js
 await document.querySelector("git-log").reload();
+await document.querySelector("git-show").reload();
 ```
 
 `reload()` bypasses a stored response while still sharing an identical reload already in flight.

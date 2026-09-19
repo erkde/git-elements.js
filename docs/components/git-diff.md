@@ -26,7 +26,9 @@ Edit the patch below. The `patch` property updates the rendered output immediate
 ```
 
 ```js [JavaScript]
-import "@erkde/git-elements/components/git-diff";
+import { GitDiffElement } from "@erkde/git-elements/components/git-diff";
+
+customElements.define("git-diff", GitDiffElement);
 
 const input = document.querySelector("#patch-input");
 const output = document.querySelector("#patch-output");
@@ -45,6 +47,8 @@ render();
 ## Input methods
 
 Every input resolves to unified diff text. Choose the form that fits where the patch already lives.
+Unlike [`<git-log>` and `<git-show>`](/getting-started#supported-git-hosts), `<git-diff>` does not
+load directly from a repository host.
 
 ### URL
 

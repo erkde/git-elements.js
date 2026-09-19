@@ -32,6 +32,7 @@ export default defineConfig({
         items: [
           { text: "&lt;git-diff&gt;", link: "/components/git-diff" },
           { text: "&lt;git-log&gt;", link: "/components/git-log" },
+          { text: "&lt;git-show&gt;", link: "/components/git-show" },
         ],
       },
     ],

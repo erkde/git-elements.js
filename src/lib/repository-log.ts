@@ -28,7 +28,7 @@ export interface RepositoryLogRequest {
   leftRight?: boolean;
 }
 
-interface ResolvedRepository {
+export interface ResolvedRepository {
   provider: "github" | "gitlab" | "bitbucket";
   canonicalUrl: string;
   path: string[];
@@ -236,7 +236,7 @@ async function fetchGitHubDifference(
   return commits.slice(0, maxCount);
 }
 
-function githubRequestInit(signal: AbortSignal): RequestInit {
+export function githubRequestInit(signal: AbortSignal): RequestInit {
   return {
     signal,
     headers: {
@@ -421,7 +421,7 @@ function dateValue(date: string | null): number {
   return Number.isNaN(value) ? 0 : value;
 }
 
-function resolveRepository(value: string): ResolvedRepository {
+export function resolveRepository(value: string): ResolvedRepository {
   let url: URL;
   try {
     url = new URL(value);
@@ -467,7 +467,7 @@ function resolveRepository(value: string): ResolvedRepository {
   throw new Error(`Unsupported public repository URL: ${value}`);
 }
 
-function validateRevision(value: string): void {
+export function validateRevision(value: string): void {
   if (
     !value ||
     value.startsWith(".") ||
@@ -500,7 +500,7 @@ function selectionRevisions(selection: RevisionSelection): string[] {
   return selection.kind === "single" ? [selection.revision] : [selection.left, selection.right];
 }
 
-function isFullObjectId(value: string): boolean {
+export function isFullObjectId(value: string): boolean {
   return /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/i.test(value);
 }
 
@@ -593,11 +593,15 @@ function waitForResult<T>(promise: Promise<T>, signal?: AbortSignal): Promise<T>
   });
 }
 
-async function fetchJson<T>(url: URL | string, init: RequestInit): Promise<T> {
+export async function fetchJson<T>(
+  url: URL | string,
+  init: RequestInit,
+  resource = "Git history",
+): Promise<T> {
   const response = await fetch(url, init);
   if (!response.ok) {
     throw new Error(
-      `Unable to load Git history from ${String(url)}: ${response.status} ${response.statusText}`,
+      `Unable to load ${resource} from ${String(url)}: ${response.status} ${response.statusText}`,
     );
   }
   return (await response.json()) as T;
@@ -611,7 +615,7 @@ function withSearchParams(url: string, values: Record<string, string>): URL {
   return result;
 }
 
-interface GitHubCommit {
+export interface GitHubCommit {
   sha: string;
   html_url?: string;
   commit: {
@@ -627,7 +631,7 @@ interface GitHubComparison {
   commits: GitHubCommit[];
 }
 
-function normalizeGitHubCommit(commit: GitHubCommit): GitLogCommit {
+export function normalizeGitHubCommit(commit: GitHubCommit): GitLogCommit {
   return {
     hash: commit.sha,
     message: commit.commit.message,
@@ -639,7 +643,7 @@ function normalizeGitHubCommit(commit: GitHubCommit): GitLogCommit {
   };
 }
 
-interface GitLabCommit {
+export interface GitLabCommit {
   id: string;
   message: string;
   author_name: string;
@@ -652,7 +656,7 @@ interface GitLabCommit {
   web_url?: string;
 }
 
-function normalizeGitLabCommit(commit: GitLabCommit): GitLogCommit {
+export function normalizeGitLabCommit(commit: GitLabCommit): GitLogCommit {
   return {
     hash: commit.id,
     message: commit.message,
@@ -676,7 +680,7 @@ interface BitbucketCommitPage {
   values: BitbucketCommit[];
 }
 
-interface BitbucketCommit {
+export interface BitbucketCommit {
   hash: string;
   message: string;
   date?: string;
@@ -685,7 +689,7 @@ interface BitbucketCommit {
   links?: { html?: { href?: string } };
 }
 
-function normalizeBitbucketCommit(commit: BitbucketCommit): GitLogCommit {
+export function normalizeBitbucketCommit(commit: BitbucketCommit): GitLogCommit {
   const author = commit.author?.raw?.replace(/\s*<[^>]+>\s*$/, "") ?? "";
   const email = /<([^>]+)>\s*$/.exec(commit.author?.raw ?? "")?.[1] ?? null;
   const identity = { name: author, email, date: commit.date ?? null };

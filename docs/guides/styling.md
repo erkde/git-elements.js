@@ -12,6 +12,8 @@ The elements follow the operating-system color preference by default. Set `theme
 <git-diff theme="dark" src="./changes.patch"></git-diff>
 <git-log theme="dark" repository="https://github.com/erkde/git-elements.js" revisions="main">
 </git-log>
+<git-show theme="dark" repository="https://github.com/erkde/git-elements.js" revision="v0.1.1">
+</git-show>
 ```
 
 ## `<git-diff>` custom properties
@@ -70,5 +72,31 @@ Exposed parts include `list`, `commit`, `side`, `side-left`, `side-right`, `hash
 ```css
 git-log::part(hash) {
   font-weight: 700;
+}
+```
+
+## `<git-show>` custom properties
+
+```css
+git-show {
+  --git-show-bg: #171328;
+  --git-show-text-color: #e9e4ff;
+  --git-show-border-color: #4c426d;
+  --git-show-muted-color: #968db5;
+  --git-show-link-color: #b5a4ff;
+  --git-show-font-family: ui-monospace, monospace;
+  --git-show-font-size: 13px;
+  --git-show-line-height: 20px;
+  --git-show-loading-delay: 200ms;
+}
+```
+
+The nested `<git-diff>` inherits diff custom properties set on `<git-show>`. Exposed parts include
+`container`, `header`, `hash`, `author`, `date`, `message`, `subject`, `body`, `diff`, `loading`, and
+`error`.
+
+```css
+git-show::part(subject) {
+  letter-spacing: 0.02em;
 }
 ```

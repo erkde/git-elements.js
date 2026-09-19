@@ -5,6 +5,7 @@ export default defineConfig({
     index: "src/index.ts",
     "components/git-diff": "src/components/git-diff.ts",
     "components/git-log": "src/components/git-log.ts",
+    "components/git-show": "src/components/git-show.ts",
   },
   format: ["esm"],
   target: "es2022",

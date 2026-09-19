@@ -40,7 +40,12 @@ function rewriteModulePaths(value) {
 }
 
 export default {
-  globs: ["src/index.ts", "src/components/git-diff.ts", "src/components/git-log.ts"],
+  globs: [
+    "src/index.ts",
+    "src/components/git-diff.ts",
+    "src/components/git-log.ts",
+    "src/components/git-show.ts",
+  ],
   plugins: [
     {
       name: "published-module-paths",

@@ -41,6 +41,10 @@
       "types": "./dist/components/git-log.d.ts",
       "import": "./dist/components/git-log.js"
     },
+    "./components/git-show": {
+      "types": "./dist/components/git-show.d.ts",
+      "import": "./dist/components/git-show.js"
+    },
     "./custom-elements.json": "./custom-elements.json"
   },
   "publishConfig": {

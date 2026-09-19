@@ -10,4 +10,8 @@ describe("Auto-registration", () => {
   it("registers <git-log> in customElements registry", () => {
     expect(customElements.get("git-log")).toBeDefined();
   });
+
+  it("registers <git-show> in customElements registry", () => {
+    expect(customElements.get("git-show")).toBeDefined();
+  });
 });

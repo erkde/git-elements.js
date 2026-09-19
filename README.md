@@ -8,6 +8,7 @@ Web components for presenting Git command output on the web.
 
 - [`<git-diff>`](#git-diff) renders unified diff text from a URL, inline markup, or JavaScript.
 - [`<git-log>`](#git-log) loads and renders commit history from a public hosted repository.
+- [`<git-show>`](#git-show) loads and renders one hosted commit together with its patch.
 
 ## Installation
 
@@ -127,6 +128,22 @@ stored outside the JavaScript heap, and a browser may evict it under its normal 
 
 The first release supports hosted public repositories only. It does not interpret local-only names
 such as `HEAD`, `origin/main`, reflog expressions, or unpushed commits.
+
+## `<git-show>`
+
+Render one commit and the patch it introduced from a public GitHub, GitLab.com, or Bitbucket Cloud
+repository:
+
+```html
+<git-show repository="https://github.com/erkde/git-elements.js" revision="v0.1.1" line-numbers>
+  <div slot="loading">Loading commit…</div>
+  <div slot="error">Commit unavailable.</div>
+</git-show>
+```
+
+`revision` accepts a branch, tag, or full commit ID. Branch and tag results are cached for one hour;
+full object IDs do not expire. Identical requests share both the commit metadata request and diff
+request. Call `reload()` to bypass a stored result.
 
 ## Direction
 

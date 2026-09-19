@@ -23,6 +23,14 @@
           }
         },
         {
+          "kind": "custom-element-definition",
+          "name": "git-show",
+          "declaration": {
+            "name": "GitShowElement",
+            "module": "dist/components/git-show.js"
+          }
+        },
+        {
           "kind": "js",
           "name": "GitDiffElement",
           "declaration": {
@@ -44,6 +52,30 @@
           "declaration": {
             "name": "GitLogCommit",
             "module": "dist/components/git-log.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GitShowElement",
+          "declaration": {
+            "name": "GitShowElement",
+            "module": "dist/components/git-show.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GitShowCommit",
+          "declaration": {
+            "name": "GitShowCommit",
+            "module": "dist/components/git-show.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GitShowResult",
+          "declaration": {
+            "name": "GitShowResult",
+            "module": "dist/components/git-show.js"
           }
         }
       ]
@@ -915,6 +947,479 @@
           "declaration": {
             "name": "GitLogCommit",
             "module": "../lib/repository-log.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/git-show.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Render one hosted repository revision's commit metadata and patch.",
+          "name": "GitShowElement",
+          "cssProperties": [
+            {
+              "description": "Component background color.",
+              "name": "--git-show-bg",
+              "default": "#f5f5f4"
+            },
+            {
+              "description": "Primary text color.",
+              "name": "--git-show-text-color",
+              "default": "#292524"
+            },
+            {
+              "description": "Border color.",
+              "name": "--git-show-border-color",
+              "default": "#d6d3d1"
+            },
+            {
+              "description": "Commit label color.",
+              "name": "--git-show-muted-color",
+              "default": "#78716c"
+            },
+            {
+              "description": "Commit hash link color.",
+              "name": "--git-show-link-color",
+              "default": "#006d8f"
+            },
+            {
+              "description": "Component font family.",
+              "name": "--git-show-font-family",
+              "default": "ui-monospace, monospace"
+            },
+            {
+              "description": "Component font size.",
+              "name": "--git-show-font-size",
+              "default": "12px"
+            },
+            {
+              "description": "Component line height.",
+              "name": "--git-show-line-height",
+              "default": "20px"
+            },
+            {
+              "description": "Delay before slotted loading content appears.",
+              "name": "--git-show-loading-delay",
+              "default": "150ms"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "Container for the commit metadata and patch.",
+              "name": "container"
+            },
+            {
+              "description": "Commit metadata header.",
+              "name": "header"
+            },
+            {
+              "description": "Full commit hash and link.",
+              "name": "hash"
+            },
+            {
+              "description": "Commit author identity.",
+              "name": "author"
+            },
+            {
+              "description": "Author date.",
+              "name": "date"
+            },
+            {
+              "description": "Full commit message.",
+              "name": "message"
+            },
+            {
+              "description": "First line of the commit message.",
+              "name": "subject"
+            },
+            {
+              "description": "Remaining commit message body.",
+              "name": "body"
+            },
+            {
+              "description": "Nested `<git-diff>` element.",
+              "name": "diff"
+            },
+            {
+              "description": "Loading-state container.",
+              "name": "loading"
+            },
+            {
+              "description": "Error-state container.",
+              "name": "error"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Content shown when loading exceeds the configured delay.",
+              "name": "loading"
+            },
+            {
+              "description": "Content shown when the commit cannot be loaded.",
+              "name": "error"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_commit",
+              "type": {
+                "text": "GitShowCommit | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_patch",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_container",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_hash",
+              "type": {
+                "text": "HTMLAnchorElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_author",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_date",
+              "type": {
+                "text": "HTMLTimeElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_subject",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_body",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_diff",
+              "type": {
+                "text": "GitDiffElement"
+              },
+              "privacy": "private",
+              "default": "document.createElement(\"git-diff\")"
+            },
+            {
+              "kind": "field",
+              "name": "_loadingState",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_errorState",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_sourceRequest",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "repository",
+              "type": {
+                "text": "string"
+              },
+              "description": "Public repository URL containing the revision."
+            },
+            {
+              "kind": "field",
+              "name": "revision",
+              "type": {
+                "text": "string"
+              },
+              "description": "Branch, tag, or full commit ID currently selected."
+            },
+            {
+              "kind": "field",
+              "name": "lineNumbers",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether old and new line-number gutters are shown in the patch."
+            },
+            {
+              "kind": "field",
+              "name": "commit",
+              "type": {
+                "text": "GitShowCommit | null"
+              },
+              "description": "Normalized metadata for the commit currently displayed.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "patch",
+              "type": {
+                "text": "string"
+              },
+              "description": "Raw unified diff text for the commit currently displayed.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "reload",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "description": "Bypass cached data and request the commit and patch again."
+            },
+            {
+              "kind": "method",
+              "name": "load",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "reload",
+                  "default": "false"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "clear",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "result",
+                  "type": {
+                    "text": "GitShowResult"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "syncDiffPresentation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createResourceState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "\"loading\" | \"error\""
+                  }
+                },
+                {
+                  "name": "role",
+                  "type": {
+                    "text": "\"status\" | \"alert\""
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "showResourceState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "\"loading\" | \"error\" | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[gitShowStyleSheet]"
+            },
+            {
+              "kind": "field",
+              "name": "className",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"commit-body\""
+            },
+            {
+              "kind": "field",
+              "name": "hidden",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "textContent",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Date:\""
+            }
+          ],
+          "events": [
+            {
+              "name": "load",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired after the commit and patch load and render."
+            },
+            {
+              "name": "error",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired when the commit or patch cannot be loaded."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "repository",
+              "type": {
+                "text": "string"
+              },
+              "description": "Public repository URL."
+            },
+            {
+              "name": "revision",
+              "type": {
+                "text": "string"
+              },
+              "description": "Branch, tag, or full commit ID to show."
+            },
+            {
+              "name": "line-numbers",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show old and new line-number gutters in the patch."
+            },
+            {
+              "name": "theme",
+              "type": {
+                "text": "\"light\" | \"dark\""
+              },
+              "description": "Override the operating-system color preference."
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "git-show",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GitShowElement",
+          "declaration": {
+            "name": "GitShowElement",
+            "module": "dist/components/git-show.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GitShowCommit",
+          "declaration": {
+            "name": "GitShowCommit",
+            "module": "../lib/repository-show.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GitShowResult",
+          "declaration": {
+            "name": "GitShowResult",
+            "module": "../lib/repository-show.js"
           }
         }
       ]
