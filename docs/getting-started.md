@@ -3,29 +3,33 @@
 `@erkde/git-elements` provides framework-independent custom elements for presenting Git command
 output in a browser.
 
-## Install
+## Install and register
 
 ```sh
 npm install @erkde/git-elements
 ```
 
-Import the package once to register all available elements:
+In an app built with Vite or another bundler, put this import once in the JavaScript or TypeScript
+file your page loads first, such as `src/main.js` or `src/main.ts`:
 
 ```js
+// src/main.js
 import "@erkde/git-elements";
 ```
 
-Component entry points export their element classes without registering them. To register only the
-element you use:
+The import registers `<git-diff>`, `<git-log>`, and `<git-show>`. You can then use those tags in your
+HTML or framework templates. For example, a Vite page can load `src/main.js` like this:
 
-```js
-import { GitDiffElement } from "@erkde/git-elements/components/git-diff";
-
-customElements.define("git-diff", GitDiffElement);
+```html
+<script type="module" src="/src/main.js"></script>
+<git-log
+  repository="https://github.com/erkde/git-elements.js"
+  revisions="main"
+></git-log>
 ```
 
-`<git-show>` renders its patch with `<git-diff>`, so selective registration for it requires both
-elements. The package root handles that dependency automatically.
+An existing app already loads its entry file, so the import in that file is enough. The bundler
+resolves the package name when it builds or serves the page.
 
 ## Render a diff
 
@@ -66,6 +70,20 @@ Use `<git-show>` to present one commit and the patch it introduced:
 ```
 
 See the [`<git-show>` reference](/components/git-show) for revision and caching behavior.
+
+## Register individual elements
+
+The package root registers all three elements. Component entry points export their classes without
+registering them. To register only `<git-diff>`:
+
+```js
+import { GitDiffElement } from "@erkde/git-elements/components/git-diff";
+
+customElements.define("git-diff", GitDiffElement);
+```
+
+`<git-show>` renders its patch with `<git-diff>`, so selective registration for it requires both
+elements.
 
 ## Supported Git hosts
 
