@@ -1,6 +1,6 @@
 # Styling
 
-Both elements use shadow DOM. Customize their palettes and typography with inherited CSS custom
+All three elements use shadow DOM. Customize their palettes and typography with CSS custom
 properties, and target specific rendered structures through CSS parts.
 
 ## Themes
@@ -27,58 +27,44 @@ The elements follow the operating-system color preference by default. Set `theme
 </git-show>
 ```
 
-## `<git-diff>` custom properties
+## Style `<git-diff>`
 
 ```css
 git-diff {
   --git-diff-bg: #171328;
   --git-diff-text-color: #e9e4ff;
-  --git-diff-border-color: #4c426d;
-  --git-diff-muted-color: #968db5;
   --git-diff-add-text: #7de2b8;
   --git-diff-del-text: #ff8fa3;
-  --git-diff-hunk-text: #b5a4ff;
-  --git-diff-meta-text: #f1c97a;
-  --git-diff-hover-bg: rgb(255 255 255 / 4.5%);
-  --git-diff-font-family: ui-monospace, monospace;
-  --git-diff-font-size: 13px;
-  --git-diff-line-height: 20px;
-  --git-diff-loading-delay: 200ms;
 }
 ```
 
-Exposed parts include `container`, `file`, `file-header`, `file-path`, `status`, `file-meta`, `table`,
-`row`, `hunk-header`, `line-num`, `old-line-num`, `new-line-num`, `content`, `loading`, and `error`.
-File status and line type variants are also exposed as part names.
+The change summaries use the same colors as the patch. The addition and deletion colors above also
+style numstat counts and stat bars. Muted text, annotations, paths, and row borders use the
+corresponding diff properties.
 
 ```css
 git-diff::part(file-header) {
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+
+git-diff::part(stat-graph) {
+  height: 12px;
+}
 ```
 
-## `<git-log>` custom properties
+See the complete [`<git-diff>` custom property](/components/git-diff#css-custom-properties) and
+[CSS part](/components/git-diff#css-parts) lists, including every summary part.
+
+## Style `<git-log>`
 
 ```css
 git-log {
   --git-log-bg: #171328;
   --git-log-text-color: #e9e4ff;
-  --git-log-border-color: #4c426d;
-  --git-log-muted-color: #968db5;
   --git-log-link-color: #b5a4ff;
-  --git-log-left-color: #ff8fa3;
-  --git-log-right-color: #7de2b8;
-  --git-log-hover-bg: rgb(255 255 255 / 4.5%);
-  --git-log-font-family: ui-monospace, monospace;
-  --git-log-font-size: 13px;
-  --git-log-line-height: 20px;
-  --git-log-loading-delay: 200ms;
 }
 ```
-
-Exposed parts include `list`, `commit`, `side`, `side-left`, `side-right`, `hash`, `message`,
-`author`, `date`, `loading`, and `error`.
 
 ```css
 git-log::part(hash) {
@@ -86,28 +72,35 @@ git-log::part(hash) {
 }
 ```
 
-## `<git-show>` custom properties
+See all [`<git-log>` custom properties](/components/git-log#css-custom-properties) and
+[CSS parts](/components/git-log#css-parts).
+
+## Style `<git-show>`
 
 ```css
 git-show {
   --git-show-bg: #171328;
   --git-show-text-color: #e9e4ff;
-  --git-show-border-color: #4c426d;
-  --git-show-muted-color: #968db5;
   --git-show-link-color: #b5a4ff;
-  --git-show-font-family: ui-monospace, monospace;
-  --git-show-font-size: 13px;
-  --git-show-line-height: 20px;
-  --git-show-loading-delay: 200ms;
 }
 ```
 
-The nested `<git-diff>` inherits diff custom properties set on `<git-show>`. Exposed parts include
-`container`, `header`, `hash`, `author`, `date`, `message`, `subject`, `body`, `diff`, `loading`, and
-`error`.
+The nested `<git-diff>` uses the show colors and typography for its shared properties. Set diff
+colors on the exposed `diff` part to style its patch and change summaries:
+
+```css
+git-show::part(diff) {
+  --git-diff-add-text: #7de2b8;
+  --git-diff-del-text: #ff8fa3;
+  --git-diff-meta-text: #f1c97a;
+}
+```
 
 ```css
 git-show::part(subject) {
   letter-spacing: 0.02em;
 }
 ```
+
+See all [`<git-show>` custom properties](/components/git-show#css-custom-properties) and
+[CSS parts](/components/git-show#css-parts).
