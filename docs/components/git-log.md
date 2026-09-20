@@ -5,7 +5,7 @@ import GitLogDemo from '../.vitepress/theme/components/GitLogDemo.vue'
 # `<git-log>`
 
 Render commit history from a public GitHub, GitLab.com, or Bitbucket Cloud repository.
-See [supported Git hosts](/getting-started#supported-git-hosts) for accepted repository URL formats.
+See [supported Git hosts](/guides/supported-git-hosts) for accepted repository URL formats and API limits.
 
 ## Branch history
 
@@ -68,5 +68,6 @@ local-only names such as `HEAD`, `origin/main`, reflog expressions, or unpushed 
 
 <!--@include: ./_generated/git-log-api.md-->
 
-See [loading and caching](/guides/loading-and-caching) for request sharing and cache behavior, and
+See [loading and errors](/guides/loading-and-errors) for states and events,
+[repository caching](/guides/repository-caching) for request sharing and stored results, and
 [styling](/guides/styling) for custom properties and CSS parts.

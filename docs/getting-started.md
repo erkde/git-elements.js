@@ -97,7 +97,8 @@ elements.
 
 Private repositories and self-hosted Git services are not supported. `<git-diff>` has no
 repository-host integration: it renders unified diff text supplied inline, through JavaScript, or
-from a browser-accessible `src` URL.
+from a browser-accessible `src` URL. See [supported Git hosts](/guides/supported-git-hosts) for
+request limits and large-diff behavior.
 
 ## Loading states
 
@@ -114,4 +115,4 @@ inputs. They render no status wording by default, leaving the surrounding page i
 </git-log>
 ```
 
-Learn more about [loading and caching](/guides/loading-and-caching) or [styling](/guides/styling).
+Learn more about [loading and errors](/guides/loading-and-errors) or [styling](/guides/styling).

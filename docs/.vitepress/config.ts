@@ -23,7 +23,9 @@ export default defineConfig({
         text: "Guide",
         items: [
           { text: "Getting started", link: "/getting-started" },
-          { text: "Loading and caching", link: "/guides/loading-and-caching" },
+          { text: "Supported Git hosts", link: "/guides/supported-git-hosts" },
+          { text: "Loading and errors", link: "/guides/loading-and-errors" },
+          { text: "Repository caching", link: "/guides/repository-caching" },
           { text: "Styling", link: "/guides/styling" },
         ],
       },

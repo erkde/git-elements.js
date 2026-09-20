@@ -6,7 +6,7 @@ import GitShowDemo from '../.vitepress/theme/components/GitShowDemo.vue'
 
 Render one commit's metadata and patch from a public GitHub, GitLab.com, or Bitbucket Cloud
 repository.
-See [supported Git hosts](/getting-started#supported-git-hosts) for accepted repository URL formats.
+See [supported Git hosts](/guides/supported-git-hosts) for accepted repository URL formats and API limits.
 
 ## Commit and patch
 
@@ -82,22 +82,21 @@ The totals are calculated from the commit patch loaded by the nested `<git-diff>
 belong to [`<git-log>`](/components/git-log) and are rejected here.
 
 For ordinary commits, the patch shows the commit relative to its first parent. Root commits are
-shown relative to an empty tree. Provider diff-size limits still apply to unusually large commits.
+shown relative to an empty tree. See [large-diff limits](/guides/supported-git-hosts#large-diffs)
+for commits whose host omits part of a patch.
 
 The current implementation supports hosted public repositories only. It does not interpret
 local-only names such as `HEAD`, `origin/main`, reflog expressions, or unpushed commits.
 
-## Loading and caching
+## Repository caching
 
 An uncached show requires commit metadata and diff data from the provider. Identical instances
-share both requests and cache the combined result in Cache Storage when available. Mutable branch
-and tag names are reused for one hour; full object IDs do not expire.
-
-Call `reload()` to bypass a stored result. It still shares an identical reload already in flight.
+share both requests. See [repository caching](/guides/repository-caching) for stored results,
+expiration, and `reload()` behavior.
 
 ## API
 
 <!--@include: ./_generated/git-show-api.md-->
 
-See [loading and caching](/guides/loading-and-caching) for request behavior, and
+See [loading and errors](/guides/loading-and-errors) for states and events, and
 [styling](/guides/styling) for custom properties and CSS parts.

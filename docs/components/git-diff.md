@@ -50,7 +50,7 @@ render();
 ## Input methods
 
 Every input resolves to unified diff text. Choose the form that fits where the patch already lives.
-Unlike [`<git-log>` and `<git-show>`](/getting-started#supported-git-hosts), `<git-diff>` does not
+Unlike [`<git-log>` and `<git-show>`](/guides/supported-git-hosts), `<git-diff>` does not
 load directly from a repository host.
 
 ### URL
@@ -169,5 +169,5 @@ files but add no text-line counts. A partial patch produces a summary of only th
 
 <!--@include: ./_generated/git-diff-api.md-->
 
-See [loading and caching](/guides/loading-and-caching) and [styling](/guides/styling) for the shared
+See [loading and errors](/guides/loading-and-errors) and [styling](/guides/styling) for the shared
 component conventions.
