@@ -73,6 +73,55 @@ sheet.replaceSync(/* css */ `
   color: var(--git-diff-muted-color);
 }
 
+.diff-numstat {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.diff-numstat th,
+.diff-numstat td {
+  padding: 7px 8px;
+  vertical-align: top;
+}
+
+.diff-numstat th {
+  border-bottom: 1px solid var(--git-diff-border-color);
+  color: var(--git-diff-muted-color);
+  font-weight: 400;
+}
+
+.diff-numstat th:nth-child(-n + 2) {
+  width: 9ch;
+  text-align: right;
+}
+
+.diff-numstat th:last-child {
+  text-align: left;
+}
+
+.diff-numstat tbody tr + tr {
+  border-top: 1px solid var(--git-diff-border-color);
+}
+
+.numstat-additions,
+.numstat-deletions {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.numstat-additions {
+  color: var(--git-diff-add-text);
+}
+
+.numstat-deletions {
+  color: var(--git-diff-del-text);
+}
+
+.numstat-path {
+  overflow-wrap: anywhere;
+}
+
 .resource-state[hidden] {
   display: none;
 }

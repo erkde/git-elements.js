@@ -118,6 +118,22 @@ the patch:
 The summary is calculated from the supplied patch. Binary and metadata-only files count as changed
 files but add no text-line counts. A partial patch produces a summary of only the supplied changes.
 
+### Numstat
+
+Add `numstat` to show additions and deletions for each changed file in place of the patch:
+
+```html
+<git-diff
+  src="./changes.patch"
+  numstat
+></git-diff>
+```
+
+<SampleDiff numstat />
+
+Binary files show `-` for both counts. Metadata-only changes show `0` and `0`. File paths wrap to
+fit narrow screens. If both `numstat` and `shortstat` are present, `numstat` is shown.
+
 ## Line numbers
 
 Old and new line-number gutters are hidden by default. Enable them with the `line-numbers` boolean

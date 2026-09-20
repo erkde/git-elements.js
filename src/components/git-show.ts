@@ -13,6 +13,7 @@ import {
  * @attr {string} revision - Branch, tag, or full commit ID to show.
  * @attr {boolean} line-numbers - Show old and new line-number gutters in the patch.
  * @attr {boolean} shortstat - Show file, insertion, and deletion totals instead of the patch.
+ * @attr {boolean} numstat - Show additions and deletions per file instead of the patch.
  * @attr {"light" | "dark"} theme - Override the operating-system color preference.
  *
  * @slot loading - Content shown when loading exceeds the configured delay.
@@ -44,7 +45,14 @@ import {
  * @csspart error - Error-state container.
  */
 export class GitShowElement extends HTMLElement {
-  static observedAttributes = ["repository", "revision", "line-numbers", "shortstat", "theme"];
+  static observedAttributes = [
+    "repository",
+    "revision",
+    "line-numbers",
+    "shortstat",
+    "numstat",
+    "theme",
+  ];
 
   private _commit: GitShowCommit | null = null;
   private _patch = "";
@@ -137,7 +145,7 @@ export class GitShowElement extends HTMLElement {
     if (oldValue === newValue || !this.isConnected) {
       return;
     }
-    if (name === "line-numbers" || name === "shortstat" || name === "theme") {
+    if (name === "line-numbers" || name === "shortstat" || name === "numstat" || name === "theme") {
       this.syncDiffPresentation();
       return;
     }
@@ -186,6 +194,15 @@ export class GitShowElement extends HTMLElement {
 
   set shortStat(value: boolean) {
     this.toggleAttribute("shortstat", value);
+  }
+
+  /** Whether per-file addition and deletion counts replace the patch. */
+  get numStat(): boolean {
+    return this.hasAttribute("numstat");
+  }
+
+  set numStat(value: boolean) {
+    this.toggleAttribute("numstat", value);
   }
 
   /** Normalized metadata for the commit currently displayed. */
@@ -278,6 +295,7 @@ export class GitShowElement extends HTMLElement {
   private syncDiffPresentation(): void {
     this._diff.toggleAttribute("line-numbers", this.lineNumbers);
     this._diff.toggleAttribute("shortstat", this.shortStat);
+    this._diff.toggleAttribute("numstat", this.numStat);
     const theme = this.getAttribute("theme");
     if (theme) {
       this._diff.setAttribute("theme", theme);

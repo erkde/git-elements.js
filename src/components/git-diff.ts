@@ -1,4 +1,5 @@
 import {
+  countDiffByFile,
   formatDiffPath,
   parseDiff,
   summarizeDiff,
@@ -13,6 +14,7 @@ import { gitDiffStyleSheet } from "./git-diff.css.js";
  * @attr {string} src - Browser-accessible URL of a unified diff to fetch and render.
  * @attr {boolean} line-numbers - Show old and new line-number gutters.
  * @attr {boolean} shortstat - Show file, insertion, and deletion totals instead of the patch.
+ * @attr {boolean} numstat - Show additions and deletions per file instead of the patch.
  * @attr {"light" | "dark"} theme - Override the operating-system color preference.
  *
  * @slot loading - Content shown when a `src` request exceeds the loading delay.
@@ -35,8 +37,13 @@ import { gitDiffStyleSheet } from "./git-diff.css.js";
  * @cssprop [--git-diff-line-height=20px] - Diff line height.
  * @cssprop [--git-diff-loading-delay=150ms] - Delay before slotted loading content appears.
  *
- * @csspart container - Container for the shortstat or rendered file diffs.
+ * @csspart container - Container for the summary or rendered file diffs.
  * @csspart shortstat - File, insertion, and deletion totals.
+ * @csspart numstat - Table of additions and deletions per file.
+ * @csspart numstat-row - A file row in the numstat table.
+ * @csspart numstat-additions - A file's addition count.
+ * @csspart numstat-deletions - A file's deletion count.
+ * @csspart numstat-path - A file path in the numstat table.
  * @csspart loading - Loading-state container.
  * @csspart error - Error-state container.
  * @csspart file - A rendered file diff.
@@ -65,7 +72,7 @@ import { gitDiffStyleSheet } from "./git-diff.css.js";
  * @csspart content - A diff-content cell.
  */
 export class GitDiffElement extends HTMLElement {
-  static observedAttributes = ["src", "shortstat"];
+  static observedAttributes = ["src", "shortstat", "numstat"];
 
   private _patch = "";
   private _parsedDiffs: ParsedDiff[] = [];
@@ -123,7 +130,7 @@ export class GitDiffElement extends HTMLElement {
       return;
     }
 
-    if (name === "shortstat") {
+    if (name === "shortstat" || name === "numstat") {
       this.render();
       return;
     }
@@ -170,6 +177,15 @@ export class GitDiffElement extends HTMLElement {
 
   set shortStat(value: boolean) {
     this.toggleAttribute("shortstat", value);
+  }
+
+  /** Whether per-file addition and deletion counts replace the patch. */
+  get numStat(): boolean {
+    return this.hasAttribute("numstat");
+  }
+
+  set numStat(value: boolean) {
+    this.toggleAttribute("numstat", value);
   }
 
   /** Raw unified diff text currently rendered by the element. */
@@ -314,6 +330,11 @@ export class GitDiffElement extends HTMLElement {
       return;
     }
 
+    if (this.numStat) {
+      this._container.appendChild(this.createNumStat());
+      return;
+    }
+
     if (this.shortStat) {
       this._container.appendChild(this.createShortStat());
       return;
@@ -430,6 +451,50 @@ export class GitDiffElement extends HTMLElement {
     section.textContent = terms.join(", ");
 
     return section;
+  }
+
+  private createNumStat(): HTMLTableElement {
+    const table = document.createElement("table");
+    table.className = "diff-numstat";
+    table.setAttribute("part", "numstat");
+    table.setAttribute("aria-label", "Changes by file");
+
+    const head = document.createElement("thead");
+    const headingRow = document.createElement("tr");
+    for (const label of ["Additions", "Deletions", "File"]) {
+      const heading = document.createElement("th");
+      heading.scope = "col";
+      heading.textContent = label;
+      headingRow.appendChild(heading);
+    }
+    head.appendChild(headingRow);
+
+    const body = document.createElement("tbody");
+    for (const stat of countDiffByFile(this._parsedDiffs)) {
+      const row = document.createElement("tr");
+      row.setAttribute("part", "numstat-row");
+
+      for (const [kind, count] of [
+        ["additions", stat.additions],
+        ["deletions", stat.deletions],
+      ] as const) {
+        const cell = document.createElement("td");
+        cell.className = `numstat-${kind}`;
+        cell.setAttribute("part", `numstat-${kind}`);
+        cell.textContent = stat.isBinary ? "-" : String(count);
+        row.appendChild(cell);
+      }
+
+      const path = document.createElement("td");
+      path.className = "numstat-path";
+      path.setAttribute("part", "numstat-path");
+      path.textContent = formatDiffPath(stat);
+      row.appendChild(path);
+      body.appendChild(row);
+    }
+
+    table.append(head, body);
+    return table;
   }
 
   private createLineRow(line: DiffLine): HTMLTableRowElement {

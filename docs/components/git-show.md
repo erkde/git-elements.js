@@ -41,6 +41,23 @@ Add `shortstat` to show changed-file, insertion, and deletion totals in place of
 
 The totals are calculated from the commit patch loaded by the nested `<git-diff>` element.
 
+### Numstat
+
+Add `numstat` to show additions and deletions for each file in the commit patch:
+
+```html
+<git-show
+  repository="https://github.com/erkde/git-elements.js"
+  revision="v0.1.1"
+  numstat
+></git-show>
+```
+
+<GitShowDemo revision="v0.1.1" numstat />
+
+The counts come from the same patch as the full view. Binary files show `-` for both counts. If
+both summary attributes are present, `numstat` is shown.
+
 ## Revision semantics
 
 `<git-show>` accepts one revision rather than a revision set. Two-dot and three-dot expressions

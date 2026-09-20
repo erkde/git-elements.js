@@ -62,6 +62,52 @@ describe("GitDiffElement Rendering", () => {
     expect(element.shadowRoot!.querySelectorAll(".diff-row")).toHaveLength(2);
   });
 
+  it("shows per-file numstat counts and restores the patch when disabled", () => {
+    element.patch = `${SAMPLE_PATCH}
+diff --git a/old.txt b/new.txt
+similarity index 100%
+rename from old.txt
+rename to new.txt
+diff --git a/logo.png b/logo.png
+index 1234567..89abcde 100644
+Binary files a/logo.png and b/logo.png differ`;
+    const parsedDiffs = element.parsedDiffs;
+
+    element.numStat = true;
+
+    const table = element.shadowRoot!.querySelector("[part='numstat']")!;
+    const rows = table.querySelectorAll("tbody tr");
+    expect(element.hasAttribute("numstat")).toBe(true);
+    expect(element.parsedDiffs).toBe(parsedDiffs);
+    expect(table.getAttribute("aria-label")).toBe("Changes by file");
+    expect(Array.from(table.querySelectorAll("th"), (cell) => cell.textContent)).toEqual([
+      "Additions",
+      "Deletions",
+      "File",
+    ]);
+    expect(
+      Array.from(rows, (row) => Array.from(row.querySelectorAll("td"), (cell) => cell.textContent)),
+    ).toEqual([
+      ["1", "1", "src/index.ts"],
+      ["0", "0", "old.txt → new.txt"],
+      ["-", "-", "logo.png"],
+    ]);
+    expect(element.shadowRoot!.querySelectorAll(".file-diff")).toHaveLength(0);
+
+    element.shortStat = true;
+    expect(element.shadowRoot!.querySelector("[part='numstat']")).not.toBeNull();
+    expect(element.shadowRoot!.querySelector("[part='shortstat']")).toBeNull();
+
+    element.numStat = false;
+    expect(element.shadowRoot!.querySelector("[part='shortstat']")?.textContent).toBe(
+      "3 files changed, 1 insertion(+), 1 deletion(-)",
+    );
+
+    element.shortStat = false;
+    expect(element.shadowRoot!.querySelector("[part='numstat']")).toBeNull();
+    expect(element.shadowRoot!.querySelectorAll(".file-diff")).toHaveLength(3);
+  });
+
   it("renders table rows when setting patch property", () => {
     element.patch = SAMPLE_PATCH;
 

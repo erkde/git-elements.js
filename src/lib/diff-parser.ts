@@ -43,7 +43,7 @@ export interface DiffFileStat {
   deletions: number;
 }
 
-export function formatDiffPath(file: ParsedDiff): string {
+export function formatDiffPath(file: Pick<ParsedDiff, "oldPath" | "newPath">): string {
   return file.oldPath && file.newPath && file.oldPath !== file.newPath
     ? `${file.oldPath} → ${file.newPath}`
     : (file.newPath ?? file.oldPath ?? "(unknown file)");

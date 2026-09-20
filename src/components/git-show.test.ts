@@ -55,17 +55,19 @@ describe("GitShowElement", () => {
     vi.unstubAllGlobals();
   });
 
-  it("reflects its repository, revision, line-number, and shortstat properties", () => {
+  it("reflects its repository, revision, line-number, and summary properties", () => {
     element.remove();
     element.repository = "https://github.com/owner/project";
     element.revision = "main";
     element.lineNumbers = true;
     element.shortStat = true;
+    element.numStat = true;
 
     expect(element.getAttribute("repository")).toBe("https://github.com/owner/project");
     expect(element.getAttribute("revision")).toBe("main");
     expect(element.hasAttribute("line-numbers")).toBe(true);
     expect(element.hasAttribute("shortstat")).toBe(true);
+    expect(element.hasAttribute("numstat")).toBe(true);
   });
 
   it("loads and renders commit metadata followed by its patch", async () => {
@@ -104,7 +106,7 @@ describe("GitShowElement", () => {
     expect(loadListener).toHaveBeenCalledOnce();
   });
 
-  it("forwards line numbers, shortstat, and theme without reloading", async () => {
+  it("forwards line numbers, summary modes, and theme without reloading", async () => {
     const commit = githubCommit("b".repeat(40));
     const fetchMock = vi
       .fn()
@@ -129,7 +131,18 @@ describe("GitShowElement", () => {
     expect(diff.getAttribute("theme")).toBe("dark");
     expect(fetchMock).toHaveBeenCalledTimes(2);
 
+    element.numStat = true;
+    expect(diff.hasAttribute("numstat")).toBe(true);
+    expect(diff.shadowRoot!.querySelector("[part='numstat'] tbody tr")?.textContent).toContain(
+      "message.txt",
+    );
+    expect(diff.shadowRoot!.querySelector("[part='shortstat']")).toBeNull();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+
     element.shortStat = false;
+    expect(diff.shadowRoot!.querySelector("[part='numstat']")).not.toBeNull();
+
+    element.numStat = false;
     expect(diff.shadowRoot!.querySelector("[part='shortstat']")).toBeNull();
     expect(diff.shadowRoot!.querySelectorAll(".diff-row")).toHaveLength(2);
     expect(fetchMock).toHaveBeenCalledTimes(2);

@@ -157,12 +157,32 @@
           ],
           "cssParts": [
             {
-              "description": "Container for the shortstat or rendered file diffs.",
+              "description": "Container for the summary or rendered file diffs.",
               "name": "container"
             },
             {
               "description": "File, insertion, and deletion totals.",
               "name": "shortstat"
+            },
+            {
+              "description": "Table of additions and deletions per file.",
+              "name": "numstat"
+            },
+            {
+              "description": "A file row in the numstat table.",
+              "name": "numstat-row"
+            },
+            {
+              "description": "A file's addition count.",
+              "name": "numstat-additions"
+            },
+            {
+              "description": "A file's deletion count.",
+              "name": "numstat-deletions"
+            },
+            {
+              "description": "A file path in the numstat table.",
+              "name": "numstat-path"
             },
             {
               "description": "Loading-state container.",
@@ -366,6 +386,14 @@
             },
             {
               "kind": "field",
+              "name": "numStat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether per-file addition and deletion counts replace the patch."
+            },
+            {
+              "kind": "field",
               "name": "patch",
               "type": {
                 "text": "string"
@@ -507,6 +535,16 @@
             },
             {
               "kind": "method",
+              "name": "createNumStat",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTableElement"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "createLineRow",
               "privacy": "private",
               "return": {
@@ -562,6 +600,13 @@
                 "text": "boolean"
               },
               "description": "Show file, insertion, and deletion totals instead of the patch."
+            },
+            {
+              "name": "numstat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show additions and deletions per file instead of the patch."
             },
             {
               "type": {
@@ -1226,6 +1271,14 @@
             },
             {
               "kind": "field",
+              "name": "numStat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether per-file addition and deletion counts replace the patch."
+            },
+            {
+              "kind": "field",
               "name": "commit",
               "type": {
                 "text": "GitShowCommit | null"
@@ -1425,6 +1478,13 @@
                 "text": "boolean"
               },
               "description": "Show file, insertion, and deletion totals instead of the patch."
+            },
+            {
+              "name": "numstat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show additions and deletions per file instead of the patch."
             },
             {
               "name": "theme",
