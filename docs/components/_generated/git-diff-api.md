@@ -7,6 +7,7 @@
 | `src`          | `string`            | Browser-accessible URL of a unified diff to fetch and render.   |
 | `shortstat`    | `boolean`           | Show file, insertion, and deletion totals instead of the patch. |
 | `numstat`      | `boolean`           | Show additions and deletions per file instead of the patch.     |
+| `stat`         | `boolean`           | Show a per-file change graph and totals instead of the patch.   |
 | `line-numbers` | `boolean`           | Show old and new line-number gutters.                           |
 | `theme`        | `"light" \| "dark"` | Override the operating-system color preference.                 |
 
@@ -18,6 +19,7 @@
 | `lineNumbers` | `boolean`      | Whether old and new line-number gutters are shown.                                |
 | `shortStat`   | `boolean`      | Whether file, insertion, and deletion totals replace the patch.                   |
 | `numStat`     | `boolean`      | Whether per-file addition and deletion counts replace the patch.                  |
+| `stat`        | `boolean`      | Whether per-file change graphs and totals replace the patch.                      |
 | `patch`       | `string`       | Raw unified diff text currently rendered by the element.                          |
 | `parsedDiffs` | `ParsedDiff[]` | Parsed files, hunks, line numbers, and metadata for the current patch. Read-only. |
 
@@ -64,6 +66,13 @@
 | `numstat-additions` | A file's addition count.                           |
 | `numstat-deletions` | A file's deletion count.                           |
 | `numstat-path`      | A file path in the numstat table.                  |
+| `stat`              | Per-file change graphs and totals.                 |
+| `stat-file`         | A file row in the stat view.                       |
+| `stat-path`         | A file path in the stat view.                      |
+| `stat-annotation`   | A file status or mode change in the stat view.     |
+| `stat-graph`        | A visual graph of a file's changed lines.          |
+| `stat-additions`    | Added-line segment of a stat graph.                |
+| `stat-deletions`    | Deleted-line segment of a stat graph.              |
 | `loading`           | Loading-state container.                           |
 | `error`             | Error-state container.                             |
 | `file`              | A rendered file diff.                              |

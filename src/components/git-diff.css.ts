@@ -122,6 +122,80 @@ sheet.replaceSync(/* css */ `
   overflow-wrap: anywhere;
 }
 
+.stat-file {
+  padding: 9px 12px;
+}
+
+.stat-file + .stat-file,
+.diff-stat .diff-shortstat {
+  border-top: 1px solid var(--git-diff-border-color);
+}
+
+.stat-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+
+.stat-path {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.stat-annotation {
+  color: var(--git-diff-meta-text);
+  white-space: nowrap;
+}
+
+.stat-annotation::before {
+  content: "(";
+}
+
+.stat-annotation::after {
+  content: ")";
+}
+
+.stat-activity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-count {
+  flex: none;
+  color: var(--git-diff-muted-color);
+}
+
+.stat-graph {
+  display: flex;
+  flex: 1 1 8rem;
+  max-width: 20rem;
+  min-width: 0;
+  height: 8px;
+}
+
+.stat-additions,
+.stat-deletions {
+  min-width: 2px;
+}
+
+.stat-additions {
+  background-color: var(--git-diff-add-text);
+}
+
+.stat-deletions {
+  background-color: var(--git-diff-del-text);
+}
+
+.stat-numbers {
+  flex: none;
+  color: var(--git-diff-muted-color);
+}
+
 .resource-state[hidden] {
   display: none;
 }

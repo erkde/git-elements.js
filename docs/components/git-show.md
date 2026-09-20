@@ -23,23 +23,25 @@ resolves to the commit it currently names.
 
 <GitShowDemo revision="v0.1.1" />
 
-## Summaries
+## Change summaries
 
-### Short stat
+### Stat
 
-Add `shortstat` to show changed-file, insertion, and deletion totals in place of the commit patch:
+Add `stat` for a per-file change graph and a totals line:
 
 ```html
 <git-show
   repository="https://github.com/erkde/git-elements.js"
   revision="v0.1.1"
-  shortstat
+  stat
 ></git-show>
 ```
 
-<GitShowDemo revision="v0.1.1" shortstat />
+<GitShowDemo revision="v0.1.1" stat />
 
-The totals are calculated from the commit patch loaded by the nested `<git-diff>` element.
+The bars and counts come from the loaded commit patch. New, deleted, renamed, copied, and
+mode-changed files get compact labels. If several summary attributes are present, `stat` takes
+precedence.
 
 ### Numstat
 
@@ -56,7 +58,23 @@ Add `numstat` to show additions and deletions for each file in the commit patch:
 <GitShowDemo revision="v0.1.1" numstat />
 
 The counts come from the same patch as the full view. Binary files show `-` for both counts. If
-both summary attributes are present, `numstat` is shown.
+`numstat` and `shortstat` are both present, `numstat` is shown.
+
+### Short stat
+
+Add `shortstat` to show changed-file, insertion, and deletion totals in place of the commit patch:
+
+```html
+<git-show
+  repository="https://github.com/erkde/git-elements.js"
+  revision="v0.1.1"
+  shortstat
+></git-show>
+```
+
+<GitShowDemo revision="v0.1.1" shortstat />
+
+The totals are calculated from the commit patch loaded by the nested `<git-diff>` element.
 
 ## Revision semantics
 

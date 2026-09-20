@@ -185,6 +185,34 @@
               "name": "numstat-path"
             },
             {
+              "description": "Per-file change graphs and totals.",
+              "name": "stat"
+            },
+            {
+              "description": "A file row in the stat view.",
+              "name": "stat-file"
+            },
+            {
+              "description": "A file path in the stat view.",
+              "name": "stat-path"
+            },
+            {
+              "description": "A file status or mode change in the stat view.",
+              "name": "stat-annotation"
+            },
+            {
+              "description": "A visual graph of a file's changed lines.",
+              "name": "stat-graph"
+            },
+            {
+              "description": "Added-line segment of a stat graph.",
+              "name": "stat-additions"
+            },
+            {
+              "description": "Deleted-line segment of a stat graph.",
+              "name": "stat-deletions"
+            },
+            {
               "description": "Loading-state container.",
               "name": "loading"
             },
@@ -394,6 +422,14 @@
             },
             {
               "kind": "field",
+              "name": "stat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether per-file change graphs and totals replace the patch."
+            },
+            {
+              "kind": "field",
               "name": "patch",
               "type": {
                 "text": "string"
@@ -545,6 +581,34 @@
             },
             {
               "kind": "method",
+              "name": "createStat",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "statAnnotations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "file",
+                  "type": {
+                    "text": "ParsedDiff"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "createLineRow",
               "privacy": "private",
               "return": {
@@ -607,6 +671,13 @@
                 "text": "boolean"
               },
               "description": "Show additions and deletions per file instead of the patch."
+            },
+            {
+              "name": "stat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show a per-file change graph and totals instead of the patch."
             },
             {
               "type": {
@@ -1279,6 +1350,14 @@
             },
             {
               "kind": "field",
+              "name": "stat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether per-file change graphs and totals replace the patch."
+            },
+            {
+              "kind": "field",
               "name": "commit",
               "type": {
                 "text": "GitShowCommit | null"
@@ -1485,6 +1564,13 @@
                 "text": "boolean"
               },
               "description": "Show additions and deletions per file instead of the patch."
+            },
+            {
+              "name": "stat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show a per-file change graph and totals instead of the patch."
             },
             {
               "name": "theme",

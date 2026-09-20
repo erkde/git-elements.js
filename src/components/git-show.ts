@@ -14,6 +14,7 @@ import {
  * @attr {boolean} line-numbers - Show old and new line-number gutters in the patch.
  * @attr {boolean} shortstat - Show file, insertion, and deletion totals instead of the patch.
  * @attr {boolean} numstat - Show additions and deletions per file instead of the patch.
+ * @attr {boolean} stat - Show a per-file change graph and totals instead of the patch.
  * @attr {"light" | "dark"} theme - Override the operating-system color preference.
  *
  * @slot loading - Content shown when loading exceeds the configured delay.
@@ -51,6 +52,7 @@ export class GitShowElement extends HTMLElement {
     "line-numbers",
     "shortstat",
     "numstat",
+    "stat",
     "theme",
   ];
 
@@ -145,7 +147,13 @@ export class GitShowElement extends HTMLElement {
     if (oldValue === newValue || !this.isConnected) {
       return;
     }
-    if (name === "line-numbers" || name === "shortstat" || name === "numstat" || name === "theme") {
+    if (
+      name === "line-numbers" ||
+      name === "shortstat" ||
+      name === "numstat" ||
+      name === "stat" ||
+      name === "theme"
+    ) {
       this.syncDiffPresentation();
       return;
     }
@@ -203,6 +211,15 @@ export class GitShowElement extends HTMLElement {
 
   set numStat(value: boolean) {
     this.toggleAttribute("numstat", value);
+  }
+
+  /** Whether per-file change graphs and totals replace the patch. */
+  get stat(): boolean {
+    return this.hasAttribute("stat");
+  }
+
+  set stat(value: boolean) {
+    this.toggleAttribute("stat", value);
   }
 
   /** Normalized metadata for the commit currently displayed. */
@@ -296,6 +313,7 @@ export class GitShowElement extends HTMLElement {
     this._diff.toggleAttribute("line-numbers", this.lineNumbers);
     this._diff.toggleAttribute("shortstat", this.shortStat);
     this._diff.toggleAttribute("numstat", this.numStat);
+    this._diff.toggleAttribute("stat", this.stat);
     const theme = this.getAttribute("theme");
     if (theme) {
       this._diff.setAttribute("theme", theme);

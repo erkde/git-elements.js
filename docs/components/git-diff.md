@@ -99,24 +99,38 @@ file indicators, and Git-quoted paths.
 
 Pass output generated with `git diff --no-color` for consistent rendering.
 
-## Summaries
+## Line numbers
 
-### Short stat
-
-Add `shortstat` to show a single line with changed-file, insertion, and deletion totals in place of
-the patch:
+Old and new line-number gutters are hidden by default. Enable them with the `line-numbers` boolean
+attribute or `lineNumbers` property:
 
 ```html
 <git-diff
   src="./changes.patch"
-  shortstat
+  line-numbers
 ></git-diff>
 ```
 
-<SampleDiff shortstat />
+## Change summaries
 
-The summary is calculated from the supplied patch. Binary and metadata-only files count as changed
-files but add no text-line counts. A partial patch produces a summary of only the supplied changes.
+### Stat
+
+Add `stat` for a visual, per-file summary with a totals line:
+
+```html
+<git-diff
+  src="./changes.patch"
+  stat
+></git-diff>
+```
+
+<SampleDiff stat />
+
+Each bar shows additions and deletions, scaled against the file with the most changed lines. File
+paths sit above the bars and wrap on narrow screens. The view includes compact labels for new,
+deleted, renamed, copied, and mode-changed files. Binary files show “Binary” without a bar because
+the patch does not provide their byte counts. If several summary attributes are present, `stat`
+takes precedence.
 
 ### Numstat
 
@@ -134,17 +148,22 @@ Add `numstat` to show additions and deletions for each changed file in place of 
 Binary files show `-` for both counts. Metadata-only changes show `0` and `0`. File paths wrap to
 fit narrow screens. If both `numstat` and `shortstat` are present, `numstat` is shown.
 
-## Line numbers
+### Short stat
 
-Old and new line-number gutters are hidden by default. Enable them with the `line-numbers` boolean
-attribute or `lineNumbers` property:
+Add `shortstat` to show a single line with changed-file, insertion, and deletion totals in place of
+the patch:
 
 ```html
 <git-diff
   src="./changes.patch"
-  line-numbers
+  shortstat
 ></git-diff>
 ```
+
+<SampleDiff shortstat />
+
+The summary is calculated from the supplied patch. Binary and metadata-only files count as changed
+files but add no text-line counts. A partial patch produces a summary of only the supplied changes.
 
 ## API
 

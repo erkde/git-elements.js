@@ -108,6 +108,73 @@ Binary files a/logo.png and b/logo.png differ`;
     expect(element.shadowRoot!.querySelectorAll(".file-diff")).toHaveLength(3);
   });
 
+  it("shows responsive stat rows with compact change labels", () => {
+    element.patch = `${SAMPLE_PATCH}
+diff --git a/old.txt b/new.txt
+similarity index 100%
+rename from old.txt
+rename to new.txt
+diff --git a/script.sh b/script.sh
+old mode 100644
+new mode 100755
+diff --git a/new.txt b/new.txt
+new file mode 100644
+--- /dev/null
++++ b/new.txt
+@@ -0,0 +1 @@
++new
+diff --git a/old.md b/old.md
+deleted file mode 100644
+--- a/old.md
++++ /dev/null
+@@ -1 +0,0 @@
+-old
+diff --git a/logo.png b/logo.png
+new file mode 100644
+index 0000000..1234567
+Binary files /dev/null and b/logo.png differ`;
+    const parsedDiffs = element.parsedDiffs;
+
+    element.shortStat = true;
+    element.numStat = true;
+    element.stat = true;
+
+    const stat = element.shadowRoot!.querySelector("[part='stat']")!;
+    const rows = stat.querySelectorAll("[part='stat-file']");
+    expect(element.parsedDiffs).toBe(parsedDiffs);
+    expect(rows).toHaveLength(6);
+    expect(stat.getAttribute("aria-label")).toBe("File change statistics");
+    expect(rows[0]!.querySelector("[part='stat-path']")?.textContent).toBe("src/index.ts");
+    expect(rows[0]!.querySelector(".stat-count")?.textContent).toBe("2 lines");
+    expect(rows[0]!.querySelector(".stat-numbers")?.getAttribute("aria-label")).toBe(
+      "1 addition, 1 deletion",
+    );
+    expect(rows[0]!.querySelector<HTMLElement>("[part='stat-additions']")?.style.width).toBe("50%");
+    expect(rows[0]!.querySelector<HTMLElement>("[part='stat-deletions']")?.style.width).toBe("50%");
+    expect(rows[1]!.querySelector("[part='stat-path']")?.textContent).toBe("old.txt → new.txt");
+    expect(rows[1]!.querySelector("[part='stat-annotation']")?.textContent).toBe("renamed");
+    expect(rows[1]!.querySelector(".stat-count")?.textContent).toBe("0 lines");
+    expect(rows[1]!.querySelector("[part='stat-graph']")).toBeNull();
+    expect(rows[2]!.querySelector("[part='stat-annotation']")?.textContent).toBe("+x");
+    expect(rows[3]!.querySelector("[part='stat-annotation']")?.textContent).toBe("new");
+    expect(rows[3]!.querySelector<HTMLElement>("[part='stat-additions']")?.style.width).toBe("50%");
+    expect(rows[4]!.querySelector("[part='stat-annotation']")?.textContent).toBe("gone");
+    expect(rows[5]!.querySelector(".stat-count")?.textContent).toBe("Binary");
+    expect(rows[5]!.querySelector("[part='stat-graph']")).toBeNull();
+    expect(stat.querySelector("[part='shortstat']")?.textContent).toBe(
+      "6 files changed, 2 insertions(+), 2 deletions(-)",
+    );
+    expect(element.shadowRoot!.querySelector("[part='numstat']")).toBeNull();
+    expect(element.shadowRoot!.querySelectorAll(".file-diff")).toHaveLength(0);
+
+    element.stat = false;
+    expect(element.shadowRoot!.querySelector("[part='numstat']")).not.toBeNull();
+    element.numStat = false;
+    expect(element.shadowRoot!.querySelector("[part='shortstat']")).not.toBeNull();
+    element.shortStat = false;
+    expect(element.shadowRoot!.querySelectorAll(".file-diff")).toHaveLength(6);
+  });
+
   it("renders table rows when setting patch property", () => {
     element.patch = SAMPLE_PATCH;
 

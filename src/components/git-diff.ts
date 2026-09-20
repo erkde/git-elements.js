@@ -15,6 +15,7 @@ import { gitDiffStyleSheet } from "./git-diff.css.js";
  * @attr {boolean} line-numbers - Show old and new line-number gutters.
  * @attr {boolean} shortstat - Show file, insertion, and deletion totals instead of the patch.
  * @attr {boolean} numstat - Show additions and deletions per file instead of the patch.
+ * @attr {boolean} stat - Show a per-file change graph and totals instead of the patch.
  * @attr {"light" | "dark"} theme - Override the operating-system color preference.
  *
  * @slot loading - Content shown when a `src` request exceeds the loading delay.
@@ -44,6 +45,13 @@ import { gitDiffStyleSheet } from "./git-diff.css.js";
  * @csspart numstat-additions - A file's addition count.
  * @csspart numstat-deletions - A file's deletion count.
  * @csspart numstat-path - A file path in the numstat table.
+ * @csspart stat - Per-file change graphs and totals.
+ * @csspart stat-file - A file row in the stat view.
+ * @csspart stat-path - A file path in the stat view.
+ * @csspart stat-annotation - A file status or mode change in the stat view.
+ * @csspart stat-graph - A visual graph of a file's changed lines.
+ * @csspart stat-additions - Added-line segment of a stat graph.
+ * @csspart stat-deletions - Deleted-line segment of a stat graph.
  * @csspart loading - Loading-state container.
  * @csspart error - Error-state container.
  * @csspart file - A rendered file diff.
@@ -72,7 +80,7 @@ import { gitDiffStyleSheet } from "./git-diff.css.js";
  * @csspart content - A diff-content cell.
  */
 export class GitDiffElement extends HTMLElement {
-  static observedAttributes = ["src", "shortstat", "numstat"];
+  static observedAttributes = ["src", "shortstat", "numstat", "stat"];
 
   private _patch = "";
   private _parsedDiffs: ParsedDiff[] = [];
@@ -130,7 +138,7 @@ export class GitDiffElement extends HTMLElement {
       return;
     }
 
-    if (name === "shortstat" || name === "numstat") {
+    if (name === "shortstat" || name === "numstat" || name === "stat") {
       this.render();
       return;
     }
@@ -186,6 +194,15 @@ export class GitDiffElement extends HTMLElement {
 
   set numStat(value: boolean) {
     this.toggleAttribute("numstat", value);
+  }
+
+  /** Whether per-file change graphs and totals replace the patch. */
+  get stat(): boolean {
+    return this.hasAttribute("stat");
+  }
+
+  set stat(value: boolean) {
+    this.toggleAttribute("stat", value);
   }
 
   /** Raw unified diff text currently rendered by the element. */
@@ -327,6 +344,11 @@ export class GitDiffElement extends HTMLElement {
     this._container.replaceChildren();
 
     if (this._parsedDiffs.length === 0) {
+      return;
+    }
+
+    if (this.stat) {
+      this._container.appendChild(this.createStat());
       return;
     }
 
@@ -495,6 +517,110 @@ export class GitDiffElement extends HTMLElement {
 
     table.append(head, body);
     return table;
+  }
+
+  private createStat(): HTMLElement {
+    const section = document.createElement("section");
+    section.className = "diff-stat";
+    section.setAttribute("part", "stat");
+    section.setAttribute("aria-label", "File change statistics");
+
+    const stats = countDiffByFile(this._parsedDiffs);
+    const maxLines = stats.reduce(
+      (maximum, stat) => Math.max(maximum, stat.additions + stat.deletions),
+      1,
+    );
+
+    for (const [index, stat] of stats.entries()) {
+      const file = this._parsedDiffs[index]!;
+      const row = document.createElement("div");
+      row.className = "stat-file";
+      row.setAttribute("part", "stat-file");
+
+      const heading = document.createElement("div");
+      heading.className = "stat-heading";
+      const path = document.createElement("span");
+      path.className = "stat-path";
+      path.setAttribute("part", "stat-path");
+      path.textContent = formatDiffPath(stat);
+      heading.appendChild(path);
+
+      const labels = this.statAnnotations(file);
+      if (labels.length > 0) {
+        const annotation = document.createElement("span");
+        annotation.className = "stat-annotation";
+        annotation.setAttribute("part", "stat-annotation");
+        annotation.textContent = labels.join(" ");
+        heading.appendChild(annotation);
+      }
+
+      const activity = document.createElement("div");
+      activity.className = "stat-activity";
+      const total = stat.additions + stat.deletions;
+      const count = document.createElement("span");
+      count.className = "stat-count";
+      count.textContent = stat.isBinary ? "Binary" : `${total} line${total === 1 ? "" : "s"}`;
+      activity.appendChild(count);
+
+      if (!stat.isBinary && total > 0) {
+        const graph = document.createElement("div");
+        graph.className = "stat-graph";
+        graph.setAttribute("part", "stat-graph");
+        graph.setAttribute("aria-hidden", "true");
+
+        for (const [kind, lines] of [
+          ["additions", stat.additions],
+          ["deletions", stat.deletions],
+        ] as const) {
+          if (lines === 0) continue;
+          const segment = document.createElement("span");
+          segment.className = `stat-${kind}`;
+          segment.setAttribute("part", `stat-${kind}`);
+          segment.style.width = `${(lines / maxLines) * 100}%`;
+          graph.appendChild(segment);
+        }
+
+        const numbers = document.createElement("span");
+        numbers.className = "stat-numbers";
+        numbers.setAttribute(
+          "aria-label",
+          `${stat.additions} addition${stat.additions === 1 ? "" : "s"}, ${stat.deletions} deletion${stat.deletions === 1 ? "" : "s"}`,
+        );
+        numbers.textContent = `+${stat.additions} −${stat.deletions}`;
+        activity.append(graph, numbers);
+      }
+
+      row.append(heading, activity);
+      section.appendChild(row);
+    }
+
+    section.appendChild(this.createShortStat());
+    return section;
+  }
+
+  private statAnnotations(file: ParsedDiff): string[] {
+    const annotations: string[] = [];
+    if (file.status === "added") annotations.push("new");
+    if (file.status === "deleted") annotations.push("gone");
+    if (file.status === "renamed") annotations.push("renamed");
+    if (file.status === "copied") annotations.push("copied");
+
+    if (
+      (file.status === "added" && file.newMode === "120000") ||
+      (file.status === "deleted" && file.oldMode === "120000")
+    ) {
+      annotations.push("+l");
+    }
+
+    const oldExecutable = file.oldMode ? (Number.parseInt(file.oldMode, 8) & 0o111) !== 0 : false;
+    const newExecutable = file.newMode ? (Number.parseInt(file.newMode, 8) & 0o111) !== 0 : false;
+    if (oldExecutable !== newExecutable) {
+      annotations.push(newExecutable ? "+x" : "-x");
+    } else if (file.oldMode && file.newMode && file.oldMode !== file.newMode) {
+      annotations.push(`mode ${file.oldMode} → ${file.newMode}`);
+    }
+
+    return annotations;
   }
 
   private createLineRow(line: DiffLine): HTMLTableRowElement {

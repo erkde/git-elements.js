@@ -62,12 +62,14 @@ describe("GitShowElement", () => {
     element.lineNumbers = true;
     element.shortStat = true;
     element.numStat = true;
+    element.stat = true;
 
     expect(element.getAttribute("repository")).toBe("https://github.com/owner/project");
     expect(element.getAttribute("revision")).toBe("main");
     expect(element.hasAttribute("line-numbers")).toBe(true);
     expect(element.hasAttribute("shortstat")).toBe(true);
     expect(element.hasAttribute("numstat")).toBe(true);
+    expect(element.hasAttribute("stat")).toBe(true);
   });
 
   it("loads and renders commit metadata followed by its patch", async () => {
@@ -138,6 +140,20 @@ describe("GitShowElement", () => {
     );
     expect(diff.shadowRoot!.querySelector("[part='shortstat']")).toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(2);
+
+    element.stat = true;
+    expect(diff.hasAttribute("stat")).toBe(true);
+    expect(diff.shadowRoot!.querySelector("[part='stat-file'] .stat-count")?.textContent).toBe(
+      "2 lines",
+    );
+    expect(diff.shadowRoot!.querySelector("[part='stat'] [part='shortstat']")?.textContent).toBe(
+      "1 file changed, 1 insertion(+), 1 deletion(-)",
+    );
+    expect(diff.shadowRoot!.querySelector("[part='numstat']")).toBeNull();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+
+    element.stat = false;
+    expect(diff.shadowRoot!.querySelector("[part='numstat']")).not.toBeNull();
 
     element.shortStat = false;
     expect(diff.shadowRoot!.querySelector("[part='numstat']")).not.toBeNull();

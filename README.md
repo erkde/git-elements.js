@@ -84,6 +84,7 @@ mode-only changes, binary-file indicators, and Git-quoted paths. Pass uncolored 
 Add the `shortstat` attribute to show changed-file, insertion, and deletion totals in place of the patch.
 The summary is derived from the supplied patch, including when it is rendered by `<git-show>`.
 Add `numstat` to show addition and deletion counts for each file instead.
+Add `stat` for responsive per-file change bars and a totals line.
 
 ## `<git-log>`
 
