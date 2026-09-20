@@ -68,6 +68,11 @@ sheet.replaceSync(/* css */ `
   padding: 6px 0 8px;
 }
 
+.diff-shortstat {
+  padding: 10px 12px;
+  color: var(--git-diff-muted-color);
+}
+
 .resource-state[hidden] {
   display: none;
 }

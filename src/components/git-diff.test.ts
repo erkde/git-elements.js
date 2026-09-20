@@ -42,6 +42,26 @@ describe("GitDiffElement Rendering", () => {
     expect(element.hasAttribute("line-numbers")).toBe(false);
   });
 
+  it("shows only the shortstat when enabled and restores the patch when disabled", () => {
+    element.patch = SAMPLE_PATCH;
+    expect(element.shadowRoot!.querySelector("[part='shortstat']")).toBeNull();
+
+    const parsedDiffs = element.parsedDiffs;
+    element.shortStat = true;
+
+    expect(element.hasAttribute("shortstat")).toBe(true);
+    expect(element.parsedDiffs).toBe(parsedDiffs);
+    expect(element.shadowRoot!.querySelector("[part='shortstat']")?.textContent).toBe(
+      "1 file changed, 1 insertion(+), 1 deletion(-)",
+    );
+    expect(element.shadowRoot!.querySelectorAll(".diff-row")).toHaveLength(0);
+    expect(element.shadowRoot!.querySelectorAll(".file-diff")).toHaveLength(0);
+
+    element.shortStat = false;
+    expect(element.shadowRoot!.querySelector("[part='shortstat']")).toBeNull();
+    expect(element.shadowRoot!.querySelectorAll(".diff-row")).toHaveLength(2);
+  });
+
   it("renders table rows when setting patch property", () => {
     element.patch = SAMPLE_PATCH;
 
@@ -115,10 +135,13 @@ describe("GitDiffElement Rendering", () => {
     errorContent.textContent = "Changes unavailable.";
     element.appendChild(errorContent);
 
+    element.shortStat = true;
     element.patch = SAMPLE_PATCH;
+    expect(element.shadowRoot!.querySelector("[part='shortstat']")).not.toBeNull();
     element.src = "/missing.patch";
 
     expect(element.shadowRoot!.querySelectorAll(".diff-row")).toHaveLength(0);
+    expect(element.shadowRoot!.querySelector("[part='shortstat']")).toBeNull();
 
     await vi.waitFor(() => {
       expect((element.shadowRoot!.querySelector("[part='error']") as HTMLElement).hidden).toBe(
@@ -199,5 +222,10 @@ Binary files a/logo.png and b/logo.png differ`;
     );
     expect(files.item(2).querySelector(".file-meta")?.textContent).toContain("Binary file");
     expect(element.shadowRoot!.querySelectorAll(".diff-table")).toHaveLength(0);
+    element.shortStat = true;
+    expect(element.shadowRoot!.querySelectorAll(".file-diff")).toHaveLength(0);
+    expect(element.shadowRoot!.querySelector("[part='shortstat']")?.textContent).toBe(
+      "3 files changed",
+    );
   });
 });

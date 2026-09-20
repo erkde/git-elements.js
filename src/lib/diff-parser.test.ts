@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseDiff } from "./diff-parser.js";
+import { countDiffByFile, parseDiff, summarizeDiff } from "./diff-parser.js";
 
 const SAMPLE_PATCH = `--- a/src/index.ts
 +++ b/src/index.ts
@@ -184,5 +184,50 @@ index 1234567..89abcde 100644
         newLineNumber: 1,
       },
     ]);
+  });
+});
+
+describe("summarizeDiff", () => {
+  it("sums per-file counts while including metadata-only and binary files", () => {
+    const patch = `${SAMPLE_PATCH}
+diff --git a/old.txt b/new.txt
+similarity index 100%
+rename from old.txt
+rename to new.txt
+diff --git a/logo.png b/logo.png
+index 1234567..89abcde 100644
+Binary files a/logo.png and b/logo.png differ`;
+
+    const files = parseDiff(patch);
+
+    expect(countDiffByFile(files)).toEqual([
+      {
+        oldPath: "src/index.ts",
+        newPath: "src/index.ts",
+        isBinary: false,
+        additions: 2,
+        deletions: 1,
+      },
+      {
+        oldPath: "old.txt",
+        newPath: "new.txt",
+        isBinary: false,
+        additions: 0,
+        deletions: 0,
+      },
+      {
+        oldPath: "logo.png",
+        newPath: "logo.png",
+        isBinary: true,
+        additions: 0,
+        deletions: 0,
+      },
+    ]);
+
+    expect(summarizeDiff(files)).toEqual({
+      files: 3,
+      additions: 2,
+      deletions: 1,
+    });
   });
 });

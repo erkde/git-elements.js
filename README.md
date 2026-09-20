@@ -81,6 +81,9 @@ The parser supports ordinary multi-file patches, additions and deletions, rename
 mode-only changes, binary-file indicators, and Git-quoted paths. Pass uncolored output from
 `git diff --no-color` for consistent rendering.
 
+Add the `shortstat` attribute to show changed-file, insertion, and deletion totals in place of the patch.
+The summary is derived from the supplied patch, including when it is rendered by `<git-show>`.
+
 ## `<git-log>`
 
 Render commit history from a public GitHub, GitLab.com, or Bitbucket Cloud repository. A single

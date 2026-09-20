@@ -1,4 +1,10 @@
-import { parseDiff, type ParsedDiff, type DiffLine } from "../lib/diff-parser.js";
+import {
+  formatDiffPath,
+  parseDiff,
+  summarizeDiff,
+  type ParsedDiff,
+  type DiffLine,
+} from "../lib/diff-parser.js";
 import { gitDiffStyleSheet } from "./git-diff.css.js";
 
 /**
@@ -6,6 +12,7 @@ import { gitDiffStyleSheet } from "./git-diff.css.js";
  *
  * @attr {string} src - Browser-accessible URL of a unified diff to fetch and render.
  * @attr {boolean} line-numbers - Show old and new line-number gutters.
+ * @attr {boolean} shortstat - Show file, insertion, and deletion totals instead of the patch.
  * @attr {"light" | "dark"} theme - Override the operating-system color preference.
  *
  * @slot loading - Content shown when a `src` request exceeds the loading delay.
@@ -28,7 +35,8 @@ import { gitDiffStyleSheet } from "./git-diff.css.js";
  * @cssprop [--git-diff-line-height=20px] - Diff line height.
  * @cssprop [--git-diff-loading-delay=150ms] - Delay before slotted loading content appears.
  *
- * @csspart container - Container for the rendered file diffs.
+ * @csspart container - Container for the shortstat or rendered file diffs.
+ * @csspart shortstat - File, insertion, and deletion totals.
  * @csspart loading - Loading-state container.
  * @csspart error - Error-state container.
  * @csspart file - A rendered file diff.
@@ -57,7 +65,7 @@ import { gitDiffStyleSheet } from "./git-diff.css.js";
  * @csspart content - A diff-content cell.
  */
 export class GitDiffElement extends HTMLElement {
-  static observedAttributes = ["src"];
+  static observedAttributes = ["src", "shortstat"];
 
   private _patch = "";
   private _parsedDiffs: ParsedDiff[] = [];
@@ -111,9 +119,16 @@ export class GitDiffElement extends HTMLElement {
   }
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
-    if (name !== "src" || oldValue === newValue || !this.isConnected) {
+    if (oldValue === newValue || !this.isConnected) {
       return;
     }
+
+    if (name === "shortstat") {
+      this.render();
+      return;
+    }
+
+    if (name !== "src") return;
 
     if (newValue === null) {
       this._sourceRequest?.abort();
@@ -146,6 +161,15 @@ export class GitDiffElement extends HTMLElement {
 
   set lineNumbers(value: boolean) {
     this.toggleAttribute("line-numbers", value);
+  }
+
+  /** Whether file, insertion, and deletion totals replace the patch. */
+  get shortStat(): boolean {
+    return this.hasAttribute("shortstat");
+  }
+
+  set shortStat(value: boolean) {
+    this.toggleAttribute("shortstat", value);
   }
 
   /** Raw unified diff text currently rendered by the element. */
@@ -290,6 +314,11 @@ export class GitDiffElement extends HTMLElement {
       return;
     }
 
+    if (this.shortStat) {
+      this._container.appendChild(this.createShortStat());
+      return;
+    }
+
     const fragment = document.createDocumentFragment();
 
     for (const file of this._parsedDiffs) {
@@ -305,10 +334,7 @@ export class GitDiffElement extends HTMLElement {
         const path = document.createElement("span");
         path.className = "file-path";
         path.setAttribute("part", "file-path");
-        path.textContent =
-          file.oldPath && file.newPath && file.oldPath !== file.newPath
-            ? `${file.oldPath} → ${file.newPath}`
-            : (file.newPath ?? file.oldPath ?? "");
+        path.textContent = formatDiffPath(file);
         header.appendChild(path);
 
         if (file.status !== "modified") {
@@ -385,6 +411,25 @@ export class GitDiffElement extends HTMLElement {
     }
 
     this._container.appendChild(fragment);
+  }
+
+  private createShortStat(): HTMLElement {
+    const summary = summarizeDiff(this._parsedDiffs);
+    const section = document.createElement("section");
+    section.className = "diff-shortstat";
+    section.setAttribute("part", "shortstat");
+    section.setAttribute("aria-label", "Change summary");
+
+    const terms = [`${summary.files} file${summary.files === 1 ? "" : "s"} changed`];
+    if (summary.additions > 0) {
+      terms.push(`${summary.additions} insertion${summary.additions === 1 ? "" : "s"}(+)`);
+    }
+    if (summary.deletions > 0) {
+      terms.push(`${summary.deletions} deletion${summary.deletions === 1 ? "" : "s"}(-)`);
+    }
+    section.textContent = terms.join(", ");
+
+    return section;
   }
 
   private createLineRow(line: DiffLine): HTMLTableRowElement {

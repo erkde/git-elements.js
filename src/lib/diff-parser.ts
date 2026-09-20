@@ -29,6 +29,59 @@ export interface ParsedDiff {
   hunks: DiffHunk[];
 }
 
+export interface DiffShortstat {
+  files: number;
+  additions: number;
+  deletions: number;
+}
+
+export interface DiffFileStat {
+  oldPath: string | null;
+  newPath: string | null;
+  isBinary: boolean;
+  additions: number;
+  deletions: number;
+}
+
+export function formatDiffPath(file: ParsedDiff): string {
+  return file.oldPath && file.newPath && file.oldPath !== file.newPath
+    ? `${file.oldPath} → ${file.newPath}`
+    : (file.newPath ?? file.oldPath ?? "(unknown file)");
+}
+
+export function countDiffByFile(files: ParsedDiff[]): DiffFileStat[] {
+  return files.map((file) => {
+    const stat: DiffFileStat = {
+      oldPath: file.oldPath,
+      newPath: file.newPath,
+      isBinary: file.isBinary,
+      additions: 0,
+      deletions: 0,
+    };
+
+    for (const hunk of file.hunks) {
+      for (const line of hunk.lines) {
+        if (line.type === "addition") stat.additions++;
+        if (line.type === "deletion") stat.deletions++;
+      }
+    }
+
+    return stat;
+  });
+}
+
+export function summarizeDiff(files: ParsedDiff[]): DiffShortstat {
+  const summary: DiffShortstat = { files: 0, additions: 0, deletions: 0 };
+
+  for (const stat of countDiffByFile(files)) {
+    summary.files++;
+    summary.additions += stat.additions;
+    summary.deletions += stat.deletions;
+  }
+
+  return summary;
+}
+
 const HUNK_HEADER_REGEX = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/;
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();

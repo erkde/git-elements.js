@@ -55,15 +55,17 @@ describe("GitShowElement", () => {
     vi.unstubAllGlobals();
   });
 
-  it("reflects its repository, revision, and line-number properties", () => {
+  it("reflects its repository, revision, line-number, and shortstat properties", () => {
     element.remove();
     element.repository = "https://github.com/owner/project";
     element.revision = "main";
     element.lineNumbers = true;
+    element.shortStat = true;
 
     expect(element.getAttribute("repository")).toBe("https://github.com/owner/project");
     expect(element.getAttribute("revision")).toBe("main");
     expect(element.hasAttribute("line-numbers")).toBe(true);
+    expect(element.hasAttribute("shortstat")).toBe(true);
   });
 
   it("loads and renders commit metadata followed by its patch", async () => {
@@ -102,7 +104,7 @@ describe("GitShowElement", () => {
     expect(loadListener).toHaveBeenCalledOnce();
   });
 
-  it("forwards line numbers and theme without reloading", async () => {
+  it("forwards line numbers, shortstat, and theme without reloading", async () => {
     const commit = githubCommit("b".repeat(40));
     const fetchMock = vi
       .fn()
@@ -114,11 +116,22 @@ describe("GitShowElement", () => {
 
     await vi.waitFor(() => expect(element.commit).not.toBeNull());
     element.lineNumbers = true;
+    element.shortStat = true;
     element.setAttribute("theme", "dark");
 
     const diff = element.shadowRoot!.querySelector("git-diff")!;
     expect(diff.hasAttribute("line-numbers")).toBe(true);
+    expect(diff.hasAttribute("shortstat")).toBe(true);
+    expect(diff.shadowRoot!.querySelector("[part='shortstat']")?.textContent).toBe(
+      "1 file changed, 1 insertion(+), 1 deletion(-)",
+    );
+    expect(diff.shadowRoot!.querySelectorAll(".diff-row")).toHaveLength(0);
     expect(diff.getAttribute("theme")).toBe("dark");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+
+    element.shortStat = false;
+    expect(diff.shadowRoot!.querySelector("[part='shortstat']")).toBeNull();
+    expect(diff.shadowRoot!.querySelectorAll(".diff-row")).toHaveLength(2);
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 

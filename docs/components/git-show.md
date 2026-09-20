@@ -23,6 +23,24 @@ resolves to the commit it currently names.
 
 <GitShowDemo revision="v0.1.1" />
 
+## Summaries
+
+### Short stat
+
+Add `shortstat` to show changed-file, insertion, and deletion totals in place of the commit patch:
+
+```html
+<git-show
+  repository="https://github.com/erkde/git-elements.js"
+  revision="v0.1.1"
+  shortstat
+></git-show>
+```
+
+<GitShowDemo revision="v0.1.1" shortstat />
+
+The totals are calculated from the commit patch loaded by the nested `<git-diff>` element.
+
 ## Revision semantics
 
 `<git-show>` accepts one revision rather than a revision set. Two-dot and three-dot expressions

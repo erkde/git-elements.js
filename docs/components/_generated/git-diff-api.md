@@ -2,11 +2,12 @@
 
 ### Attributes
 
-| Name           | Type                | Description                                                   |
-| -------------- | ------------------- | ------------------------------------------------------------- |
-| `src`          | `string`            | Browser-accessible URL of a unified diff to fetch and render. |
-| `line-numbers` | `boolean`           | Show old and new line-number gutters.                         |
-| `theme`        | `"light" \| "dark"` | Override the operating-system color preference.               |
+| Name           | Type                | Description                                                     |
+| -------------- | ------------------- | --------------------------------------------------------------- |
+| `src`          | `string`            | Browser-accessible URL of a unified diff to fetch and render.   |
+| `shortstat`    | `boolean`           | Show file, insertion, and deletion totals instead of the patch. |
+| `line-numbers` | `boolean`           | Show old and new line-number gutters.                           |
+| `theme`        | `"light" \| "dark"` | Override the operating-system color preference.                 |
 
 ### Properties
 
@@ -14,6 +15,7 @@
 | ------------- | -------------- | --------------------------------------------------------------------------------- |
 | `src`         | `string`       | URL of the unified diff loaded by the element.                                    |
 | `lineNumbers` | `boolean`      | Whether old and new line-number gutters are shown.                                |
+| `shortStat`   | `boolean`      | Whether file, insertion, and deletion totals replace the patch.                   |
 | `patch`       | `string`       | Raw unified diff text currently rendered by the element.                          |
 | `parsedDiffs` | `ParsedDiff[]` | Parsed files, hunks, line numbers, and metadata for the current patch. Read-only. |
 
@@ -51,35 +53,36 @@
 
 ### CSS parts
 
-| Name             | Description                                        |
-| ---------------- | -------------------------------------------------- |
-| `container`      | Container for the rendered file diffs.             |
-| `loading`        | Loading-state container.                           |
-| `error`          | Error-state container.                             |
-| `file`           | A rendered file diff.                              |
-| `file-modified`  | A modified file diff.                              |
-| `file-added`     | An added file diff.                                |
-| `file-deleted`   | A deleted file diff.                               |
-| `file-renamed`   | A renamed file diff.                               |
-| `file-copied`    | A copied file diff.                                |
-| `file-header`    | Header containing a file path and optional status. |
-| `file-path`      | Displayed file path.                               |
-| `status`         | File status label.                                 |
-| `status-added`   | Added-file status label.                           |
-| `status-deleted` | Deleted-file status label.                         |
-| `status-renamed` | Renamed-file status label.                         |
-| `status-copied`  | Copied-file status label.                          |
-| `file-meta`      | File mode, similarity, or binary metadata.         |
-| `table`          | Table containing diff hunks and lines.             |
-| `row`            | A diff row.                                        |
-| `row-context`    | An unchanged context row.                          |
-| `row-addition`   | An added line row.                                 |
-| `row-deletion`   | A deleted line row.                                |
-| `hunk-header`    | A hunk header row.                                 |
-| `line-num`       | An old or new line-number cell.                    |
-| `old-line-num`   | An old line-number cell.                           |
-| `new-line-num`   | A new line-number cell.                            |
-| `content`        | A diff-content cell.                               |
+| Name             | Description                                         |
+| ---------------- | --------------------------------------------------- |
+| `container`      | Container for the shortstat or rendered file diffs. |
+| `shortstat`      | File, insertion, and deletion totals.               |
+| `loading`        | Loading-state container.                            |
+| `error`          | Error-state container.                              |
+| `file`           | A rendered file diff.                               |
+| `file-modified`  | A modified file diff.                               |
+| `file-added`     | An added file diff.                                 |
+| `file-deleted`   | A deleted file diff.                                |
+| `file-renamed`   | A renamed file diff.                                |
+| `file-copied`    | A copied file diff.                                 |
+| `file-header`    | Header containing a file path and optional status.  |
+| `file-path`      | Displayed file path.                                |
+| `status`         | File status label.                                  |
+| `status-added`   | Added-file status label.                            |
+| `status-deleted` | Deleted-file status label.                          |
+| `status-renamed` | Renamed-file status label.                          |
+| `status-copied`  | Copied-file status label.                           |
+| `file-meta`      | File mode, similarity, or binary metadata.          |
+| `table`          | Table containing diff hunks and lines.              |
+| `row`            | A diff row.                                         |
+| `row-context`    | An unchanged context row.                           |
+| `row-addition`   | An added line row.                                  |
+| `row-deletion`   | A deleted line row.                                 |
+| `hunk-header`    | A hunk header row.                                  |
+| `line-num`       | An old or new line-number cell.                     |
+| `old-line-num`   | An old line-number cell.                            |
+| `new-line-num`   | A new line-number cell.                             |
+| `content`        | A diff-content cell.                                |
 
 ### Exports and registration
 

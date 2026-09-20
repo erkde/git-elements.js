@@ -12,6 +12,7 @@ import {
  * @attr {string} repository - Public repository URL.
  * @attr {string} revision - Branch, tag, or full commit ID to show.
  * @attr {boolean} line-numbers - Show old and new line-number gutters in the patch.
+ * @attr {boolean} shortstat - Show file, insertion, and deletion totals instead of the patch.
  * @attr {"light" | "dark"} theme - Override the operating-system color preference.
  *
  * @slot loading - Content shown when loading exceeds the configured delay.
@@ -43,7 +44,7 @@ import {
  * @csspart error - Error-state container.
  */
 export class GitShowElement extends HTMLElement {
-  static observedAttributes = ["repository", "revision", "line-numbers", "theme"];
+  static observedAttributes = ["repository", "revision", "line-numbers", "shortstat", "theme"];
 
   private _commit: GitShowCommit | null = null;
   private _patch = "";
@@ -136,7 +137,7 @@ export class GitShowElement extends HTMLElement {
     if (oldValue === newValue || !this.isConnected) {
       return;
     }
-    if (name === "line-numbers" || name === "theme") {
+    if (name === "line-numbers" || name === "shortstat" || name === "theme") {
       this.syncDiffPresentation();
       return;
     }
@@ -176,6 +177,15 @@ export class GitShowElement extends HTMLElement {
 
   set lineNumbers(value: boolean) {
     this.toggleAttribute("line-numbers", value);
+  }
+
+  /** Whether file, insertion, and deletion totals replace the patch. */
+  get shortStat(): boolean {
+    return this.hasAttribute("shortstat");
+  }
+
+  set shortStat(value: boolean) {
+    this.toggleAttribute("shortstat", value);
   }
 
   /** Normalized metadata for the commit currently displayed. */
@@ -267,6 +277,7 @@ export class GitShowElement extends HTMLElement {
 
   private syncDiffPresentation(): void {
     this._diff.toggleAttribute("line-numbers", this.lineNumbers);
+    this._diff.toggleAttribute("shortstat", this.shortStat);
     const theme = this.getAttribute("theme");
     if (theme) {
       this._diff.setAttribute("theme", theme);

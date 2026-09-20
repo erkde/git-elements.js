@@ -3,6 +3,7 @@ import { useData } from "vitepress";
 
 defineProps<{
   revision: string;
+  shortstat?: boolean;
 }>();
 
 const { isDark } = useData();
@@ -14,7 +15,8 @@ const { isDark } = useData();
       repository="https://github.com/erkde/git-elements.js"
       :revision="revision"
       :theme="isDark ? 'dark' : 'light'"
-      line-numbers
+      :line-numbers="shortstat ? null : ''"
+      :shortstat="shortstat ? '' : null"
     >
       <span slot="loading" class="resource-message">Loading commit…</span>
       <span slot="error" class="resource-message">The commit is unavailable.</span>

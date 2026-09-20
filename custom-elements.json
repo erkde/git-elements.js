@@ -157,8 +157,12 @@
           ],
           "cssParts": [
             {
-              "description": "Container for the rendered file diffs.",
+              "description": "Container for the shortstat or rendered file diffs.",
               "name": "container"
+            },
+            {
+              "description": "File, insertion, and deletion totals.",
+              "name": "shortstat"
             },
             {
               "description": "Loading-state container.",
@@ -354,6 +358,14 @@
             },
             {
               "kind": "field",
+              "name": "shortStat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether file, insertion, and deletion totals replace the patch."
+            },
+            {
+              "kind": "field",
               "name": "patch",
               "type": {
                 "text": "string"
@@ -485,6 +497,16 @@
             },
             {
               "kind": "method",
+              "name": "createShortStat",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "createLineRow",
               "privacy": "private",
               "return": {
@@ -533,6 +555,13 @@
                 "text": "string"
               },
               "description": "Browser-accessible URL of a unified diff to fetch and render."
+            },
+            {
+              "name": "shortstat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show file, insertion, and deletion totals instead of the patch."
             },
             {
               "type": {
@@ -1189,6 +1218,14 @@
             },
             {
               "kind": "field",
+              "name": "shortStat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether file, insertion, and deletion totals replace the patch."
+            },
+            {
+              "kind": "field",
               "name": "commit",
               "type": {
                 "text": "GitShowCommit | null"
@@ -1381,6 +1418,13 @@
                 "text": "boolean"
               },
               "description": "Show old and new line-number gutters in the patch."
+            },
+            {
+              "name": "shortstat",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Show file, insertion, and deletion totals instead of the patch."
             },
             {
               "name": "theme",

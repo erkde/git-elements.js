@@ -2,12 +2,13 @@
 
 ### Attributes
 
-| Name           | Type                | Description                                        |
-| -------------- | ------------------- | -------------------------------------------------- |
-| `repository`   | `string`            | Public repository URL.                             |
-| `revision`     | `string`            | Branch, tag, or full commit ID to show.            |
-| `line-numbers` | `boolean`           | Show old and new line-number gutters in the patch. |
-| `theme`        | `"light" \| "dark"` | Override the operating-system color preference.    |
+| Name           | Type                | Description                                                     |
+| -------------- | ------------------- | --------------------------------------------------------------- |
+| `repository`   | `string`            | Public repository URL.                                          |
+| `revision`     | `string`            | Branch, tag, or full commit ID to show.                         |
+| `line-numbers` | `boolean`           | Show old and new line-number gutters in the patch.              |
+| `shortstat`    | `boolean`           | Show file, insertion, and deletion totals instead of the patch. |
+| `theme`        | `"light" \| "dark"` | Override the operating-system color preference.                 |
 
 ### Properties
 
@@ -16,6 +17,7 @@
 | `repository`  | `string`                | Public repository URL containing the revision.                       |
 | `revision`    | `string`                | Branch, tag, or full commit ID currently selected.                   |
 | `lineNumbers` | `boolean`               | Whether old and new line-number gutters are shown in the patch.      |
+| `shortStat`   | `boolean`               | Whether file, insertion, and deletion totals replace the patch.      |
 | `commit`      | `GitShowCommit \| null` | Normalized metadata for the commit currently displayed. Read-only.   |
 | `patch`       | `string`                | Raw unified diff text for the commit currently displayed. Read-only. |
 

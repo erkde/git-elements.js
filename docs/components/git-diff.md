@@ -99,6 +99,25 @@ file indicators, and Git-quoted paths.
 
 Pass output generated with `git diff --no-color` for consistent rendering.
 
+## Summaries
+
+### Short stat
+
+Add `shortstat` to show a single line with changed-file, insertion, and deletion totals in place of
+the patch:
+
+```html
+<git-diff
+  src="./changes.patch"
+  shortstat
+></git-diff>
+```
+
+<SampleDiff shortstat />
+
+The summary is calculated from the supplied patch. Binary and metadata-only files count as changed
+files but add no text-line counts. A partial patch produces a summary of only the supplied changes.
+
 ## Line numbers
 
 Old and new line-number gutters are hidden by default. Enable them with the `line-numbers` boolean
