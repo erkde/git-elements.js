@@ -25,6 +25,24 @@
   --vp-home-hero-name-color: var(--vp-c-brand-1);
 }
 
+.VPHomeHero:not(.has-image) .main {
+  width: 100%;
+  text-align: center;
+}
+
+.VPHomeHero:not(.has-image) .heading {
+  align-items: center;
+}
+
+.VPHomeHero:not(.has-image) .tagline {
+  max-width: 52rem;
+  margin-inline: auto;
+}
+
+.VPHomeHero:not(.has-image) .actions {
+  justify-content: center;
+}
+
 .VPHomeHero .main {
   order: 1;
 }

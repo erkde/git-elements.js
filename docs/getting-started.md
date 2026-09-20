@@ -32,7 +32,10 @@ elements. The package root handles that dependency automatically.
 Point `<git-diff>` at browser-accessible unified diff text:
 
 ```html
-<git-diff src="./changes.patch" line-numbers></git-diff>
+<git-diff
+  src="./changes.patch"
+  line-numbers
+></git-diff>
 ```
 
 See the [`<git-diff>` reference](/components/git-diff) for inline and JavaScript inputs.
@@ -56,7 +59,10 @@ See the [`<git-log>` reference](/components/git-log) for two-dot and three-dot r
 Use `<git-show>` to present one commit and the patch it introduced:
 
 ```html
-<git-show repository="https://github.com/erkde/git-elements.js" revision="v0.1.1"></git-show>
+<git-show
+  repository="https://github.com/erkde/git-elements.js"
+  revision="v0.1.1"
+></git-show>
 ```
 
 See the [`<git-show>` reference](/components/git-show) for revision and caching behavior.
@@ -81,7 +87,10 @@ All three elements expose named slots and native-style `load` and `error` events
 inputs. They render no status wording by default, leaving the surrounding page in control.
 
 ```html
-<git-log repository="https://github.com/erkde/git-elements.js" revisions="main">
+<git-log
+  repository="https://github.com/erkde/git-elements.js"
+  revisions="main"
+>
   <span slot="loading">Loading history…</span>
   <span slot="error">History unavailable.</span>
 </git-log>

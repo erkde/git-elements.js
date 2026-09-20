@@ -15,14 +15,20 @@ default. Supply named slots when the page needs visible loading or error content
 ```
 
 ```html
-<git-log repository="https://github.com/erkde/git-elements.js" revisions="main">
+<git-log
+  repository="https://github.com/erkde/git-elements.js"
+  revisions="main"
+>
   <span slot="loading">Loading history…</span>
   <span slot="error">History unavailable.</span>
 </git-log>
 ```
 
 ```html
-<git-show repository="https://github.com/erkde/git-elements.js" revision="v0.1.1">
+<git-show
+  repository="https://github.com/erkde/git-elements.js"
+  revision="v0.1.1"
+>
   <span slot="loading">Loading commit…</span>
   <span slot="error">Commit unavailable.</span>
 </git-show>

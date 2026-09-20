@@ -21,7 +21,10 @@ Edit the patch below. The `patch` property updates the rendered output immediate
   <label for="patch-input">Unified diff</label>
   <textarea id="patch-input" spellcheck="false"></textarea>
 
-  <git-diff id="patch-output" line-numbers></git-diff>
+  <git-diff
+    id="patch-output"
+    line-numbers
+  ></git-diff>
 </div>
 ```
 
@@ -102,7 +105,10 @@ Old and new line-number gutters are hidden by default. Enable them with the `lin
 attribute or `lineNumbers` property:
 
 ```html
-<git-diff src="./changes.patch" line-numbers></git-diff>
+<git-diff
+  src="./changes.patch"
+  line-numbers
+></git-diff>
 ```
 
 ## API

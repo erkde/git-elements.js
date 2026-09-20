@@ -9,10 +9,21 @@ The elements follow the operating-system color preference by default. Set `theme
 `theme="dark"` when the surrounding surface has a fixed theme:
 
 ```html
-<git-diff theme="dark" src="./changes.patch"></git-diff>
-<git-log theme="dark" repository="https://github.com/erkde/git-elements.js" revisions="main">
+<git-diff
+  theme="dark"
+  src="./changes.patch"
+></git-diff>
+<git-log
+  theme="dark"
+  repository="https://github.com/erkde/git-elements.js"
+  revisions="main"
+>
 </git-log>
-<git-show theme="dark" repository="https://github.com/erkde/git-elements.js" revision="v0.1.1">
+<git-show
+  theme="dark"
+  repository="https://github.com/erkde/git-elements.js"
+  revision="v0.1.1"
+>
 </git-show>
 ```
 

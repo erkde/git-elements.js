@@ -33,7 +33,10 @@ attribute names.
 between the first two published releases:
 
 ```html
-<git-log repository="https://github.com/erkde/git-elements.js" revisions="v0.1.0..v0.1.1"></git-log>
+<git-log
+  repository="https://github.com/erkde/git-elements.js"
+  revisions="v0.1.0..v0.1.1"
+></git-log>
 ```
 
 <GitLogDemo revisions="v0.1.0..v0.1.1" />
