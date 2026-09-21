@@ -1,157 +1,62 @@
 # git-elements.js
 
-Web components for presenting Git command output on the web.
+Framework-independent custom elements for presenting Git diffs and history in a browser.
 
 [Documentation and live examples](https://erkde.github.io/git-elements.js/)
 
-## Components
-
-- [`<git-diff>`](#git-diff) renders unified diff text from a URL, inline markup, or JavaScript.
-- [`<git-log>`](#git-log) loads and renders commit history from a public hosted repository.
-- [`<git-show>`](#git-show) loads and renders one hosted commit together with its patch.
-
-## Installation
+## Install
 
 ```sh
 npm install @erkde/git-elements
 ```
 
-Import the package once to register its custom elements:
+Import the package once in your app's JavaScript or TypeScript entry file to register all three elements:
 
 ```js
 import "@erkde/git-elements";
 ```
 
-## `<git-diff>`
+You can then use the elements in HTML or framework templates. See [getting started](https://erkde.github.io/git-elements.js/getting-started.html) for a complete page example and individual element registration.
 
-Render a diff from a URL:
+## Components
 
-```html
-<git-diff src="./changes.patch"></git-diff>
-```
+### `<git-diff>`
 
-Line-number gutters are optional:
+Render unified diff text from a browser-accessible URL, inline markup, or the JavaScript `patch` property. Add `line-numbers` for gutters, or `stat`, `numstat`, or `shortstat` for a change summary.
 
 ```html
 <git-diff src="./changes.patch" line-numbers></git-diff>
 ```
 
-Render an inline unified diff:
+[Explore `<git-diff>`](https://erkde.github.io/git-elements.js/components/git-diff.html)
+
+### `<git-log>`
+
+Render commit history from a public GitHub, GitLab.com, or Bitbucket Cloud repository. Select a branch, tag, commit ID, or two-dot or three-dot revision set with `revisions`.
 
 ```html
-<git-diff>
-  <script type="text/plain">
-    --- a/message.txt
-    +++ b/message.txt
-    @@ -1 +1 @@
-    -Hello, world!
-    +Hello, Git Elements!
-  </script>
-</git-diff>
-```
-
-Assign raw diff text from JavaScript with the `patch` property:
-
-```js
-document.querySelector("git-diff").patch = rawDiff;
-```
-
-Assigning `patch` directly cancels any pending `src` request so that a late response cannot replace
-the explicitly supplied content.
-
-External sources follow the native resource-element lifecycle. The element dispatches `load` after
-rendering or `error` when the source cannot be loaded. It renders no status UI by default; optional
-named slots provide declarative loading and error content. Loading content appears after 150ms to
-avoid flicker and can be adjusted with `--git-diff-loading-delay`.
-
-```html
-<git-diff src="./changes.patch">
-  <div slot="loading">Loading changes…</div>
-  <div slot="error">Changes unavailable.</div>
-</git-diff>
-```
-
-```js
-const diff = document.querySelector("git-diff");
-diff.addEventListener("load", () => console.log("Diff loaded"));
-diff.addEventListener("error", () => console.log("Diff failed to load"));
-```
-
-The parser supports ordinary multi-file patches, additions and deletions, renames and copies,
-mode-only changes, binary-file indicators, and Git-quoted paths. Pass uncolored output from
-`git diff --no-color` for consistent rendering.
-
-Add the `shortstat` attribute to show changed-file, insertion, and deletion totals in place of the patch.
-The summary is derived from the supplied patch, including when it is rendered by `<git-show>`.
-Add `numstat` to show addition and deletion counts for each file instead.
-Add `stat` for responsive per-file change bars and a totals line.
-
-## `<git-log>`
-
-Render commit history from a public GitHub, GitLab.com, or Bitbucket Cloud repository. A single
-revision accepts a branch, tag, or full commit ID:
-
-```html
-<git-log repository="https://github.com/erkde/git-elements.js" revisions="main"></git-log>
-```
-
-Two-dot and three-dot revision sets follow `git log` semantics:
-
-```html
-<!-- Commits reachable from feature but not main. -->
-<git-log repository="https://github.com/owner/project" revisions="main..feature"></git-log>
-
-<!-- Commits reachable from either side but not both. -->
 <git-log
-  repository="https://github.com/owner/project"
-  revisions="main...feature"
-  left-right
+  repository="https://github.com/erkde/git-elements.js"
+  revisions="main"
+  max-count="10"
 ></git-log>
 ```
 
-`left-right` marks commits unique to the first revision with `<` and commits unique to the second
-with `>`. It only affects symmetric three-dot logs.
+[Explore `<git-log>`](https://erkde.github.io/git-elements.js/components/git-log.html)
 
-The element returns at most 30 commits by default. Use `max-count` to request between 1 and 100,
-matching Git's `--max-count` concept:
+### `<git-show>`
 
-```html
-<git-log repository="https://gitlab.com/group/project" revisions="main" max-count="50">
-  <div slot="loading">Loading history…</div>
-  <div slot="error">History unavailable.</div>
-</git-log>
-```
-
-Like `<git-diff>`, `<git-log>` dispatches `load` and `error` and exposes `loading` and `error` slots.
-The normalized entries are available through the read-only `commits` property. Call `reload()` to
-bypass cached data and fetch the log again.
-
-Successful public responses are shared between identical in-flight requests and stored in Cache
-Storage when the browser makes it available. Logs starting from mutable names are reused for one
-hour; logs whose revisions are all full object IDs are immutable and do not expire. Cached data is
-stored outside the JavaScript heap, and a browser may evict it under its normal storage policy.
-
-The first release supports hosted public repositories only. It does not interpret local-only names
-such as `HEAD`, `origin/main`, reflog expressions, or unpushed commits.
-
-## `<git-show>`
-
-Render one commit and the patch it introduced from a public GitHub, GitLab.com, or Bitbucket Cloud
-repository:
+Render one hosted commit and its patch. `revision` accepts a branch, tag, or full commit ID.
 
 ```html
-<git-show repository="https://github.com/erkde/git-elements.js" revision="v0.1.1" line-numbers>
-  <div slot="loading">Loading commit…</div>
-  <div slot="error">Commit unavailable.</div>
-</git-show>
+<git-show repository="https://github.com/erkde/git-elements.js" revision="v0.1.1"></git-show>
 ```
 
-`revision` accepts a branch, tag, or full commit ID. Branch and tag results are cached for one hour;
-full object IDs do not expire. Identical requests share both the commit metadata request and diff
-request. Call `reload()` to bypass a stored result.
+[Explore `<git-show>`](https://erkde.github.io/git-elements.js/components/git-show.html)
 
-## Direction
+## Guides
 
-`@erkde/git-elements` is intended to grow into a focused collection of elements for Git output,
-such as working-tree status. Each component will use documented Git semantics while sharing the
-same loading, theming, and terminal-inspired presentation conventions.
+- [Supported Git hosts](https://erkde.github.io/git-elements.js/guides/supported-git-hosts.html) covers repository URLs, request limits, and large diffs. Repository loading supports public hosted repositories.
+- [Loading and errors](https://erkde.github.io/git-elements.js/guides/loading-and-errors.html) explains the `loading` and `error` slots and the `load` and `error` events.
+- [Repository caching](https://erkde.github.io/git-elements.js/guides/repository-caching.html) explains request sharing, stored results, and `reload()` for `<git-log>` and `<git-show>`.
+- [Styling](https://erkde.github.io/git-elements.js/guides/styling.html) covers themes, CSS custom properties, and parts.
