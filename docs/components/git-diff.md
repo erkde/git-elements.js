@@ -1,51 +1,31 @@
 <script setup>
 import GitDiffPlayground from '../.vitepress/theme/components/GitDiffPlayground.vue'
+import GitDiffInlineDemo from '../.vitepress/theme/components/GitDiffInlineDemo.vue'
 import SampleDiff from '../.vitepress/theme/components/SampleDiff.vue'
 </script>
 
 # `<git-diff>`
 
-Render uncolored unified diff text as an accessible, themeable file-by-file view.
+Render unified diff text as an accessible, themeable file-by-file view.
 
-## Playground
+## Unified diff
 
-Edit the patch below. The `patch` property updates the rendered output immediately.
+A unified diff describes file-level changes with file paths, hunks, removed lines, and added lines.
+`<git-diff>` parses that text and presents the changes as an accessible, file-by-file view:
 
-<GitDiffPlayground />
-
-:::: details View playground source
-::: code-group
-
-```html [Markup]
-<div class="playground">
-  <label for="patch-input">Unified diff</label>
-  <textarea id="patch-input" spellcheck="false"></textarea>
-
-  <git-diff
-    id="patch-output"
-    line-numbers
-  ></git-diff>
-</div>
+```html
+<git-diff>
+  <script type="text/plain">
+    --- a/message.txt
+    +++ b/message.txt
+    @@ -1 +1 @@
+    -Hello, world!
+    +Hello, Git Elements!
+  </script>
+</git-diff>
 ```
 
-```js [JavaScript]
-import { GitDiffElement } from "@erkde/git-elements/components/git-diff";
-
-customElements.define("git-diff", GitDiffElement);
-
-const input = document.querySelector("#patch-input");
-const output = document.querySelector("#patch-output");
-
-function render() {
-  output.patch = input.value;
-}
-
-input.addEventListener("input", render);
-render();
-```
-
-:::
-::::
+<GitDiffInlineDemo />
 
 ## Input methods
 
@@ -90,12 +70,50 @@ indentation is removed.
 </git-diff>
 ```
 
+## Playground
+
+Edit the patch below. The `patch` property updates the rendered output immediately:
+
+<GitDiffPlayground />
+
+:::: details View playground source
+::: code-group
+
+```html [Markup]
+<div class="playground">
+  <label for="patch-input">Unified diff</label>
+  <textarea id="patch-input" spellcheck="false"></textarea>
+
+  <git-diff
+    id="patch-output"
+    line-numbers
+  ></git-diff>
+</div>
+```
+
+```js [JavaScript]
+import { GitDiffElement } from "@erkde/git-elements/components/git-diff";
+
+customElements.define("git-diff", GitDiffElement);
+
+const input = document.querySelector("#patch-input");
+const output = document.querySelector("#patch-output");
+
+function render() {
+  output.patch = input.value;
+}
+
+input.addEventListener("input", render);
+render();
+```
+
+:::
+::::
+
 ## Supported changes
 
 The parser supports multi-file patches, additions, deletions, renames, copies, mode changes, binary
 file indicators, and Git-quoted paths.
-
-<SampleDiff />
 
 Pass output generated with `git diff --no-color` for consistent rendering.
 
