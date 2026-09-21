@@ -8,6 +8,7 @@
 | `revisions`  | `string`            | Branch, tag, commit ID, or two-dot or three-dot revision set. |
 | `max-count`  | `number`            | Maximum number of commits to display, from 1 to 100.          |
 | `left-right` | `boolean`           | Mark each side of a symmetric three-dot revision set.         |
+| `oneline`    | `boolean`           | Use a compact one-line entry for each commit.                 |
 | `theme`      | `"light" \| "dark"` | Override the operating-system color preference.               |
 
 ### Properties
@@ -18,6 +19,7 @@
 | `revisions`  | `string`                  | Branch, tag, commit ID, or two-dot or three-dot revision set.     |
 | `maxCount`   | `number`                  | Maximum number of commits to display, from 1 to 100.              |
 | `leftRight`  | `boolean`                 | Whether symmetric three-dot results identify their revision side. |
+| `oneline`    | `boolean`                 | Whether to use the compact one-line commit format.                |
 | `commits`    | `readonly GitLogCommit[]` | Normalized commits currently displayed by the element. Read-only. |
 
 ### Methods

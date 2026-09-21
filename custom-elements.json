@@ -915,6 +915,14 @@
             },
             {
               "kind": "field",
+              "name": "oneline",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to use the compact one-line commit format."
+            },
+            {
+              "kind": "field",
               "name": "commits",
               "type": {
                 "text": "readonly GitLogCommit[]"
@@ -1061,6 +1069,13 @@
                 "text": "boolean"
               },
               "description": "Mark each side of a symmetric three-dot revision set."
+            },
+            {
+              "name": "oneline",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Use a compact one-line entry for each commit."
             },
             {
               "type": {

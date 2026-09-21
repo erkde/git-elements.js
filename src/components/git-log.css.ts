@@ -92,6 +92,34 @@ sheet.replaceSync(/* css */ `
   padding: 2px 12px;
 }
 
+.commit-full {
+  display: block;
+  padding: 8px 12px;
+}
+
+.commit-full .commit-side {
+  display: inline-block;
+  width: 2ch;
+  margin-right: 6px;
+}
+
+.commit-full .commit-hash,
+.commit-full .commit-author,
+.commit-full .commit-date,
+.commit-full .commit-message {
+  display: block;
+}
+
+.commit-full .commit-hash {
+  overflow: visible;
+  white-space: normal;
+}
+
+.commit-full .commit-message {
+  margin-top: 8px;
+  white-space: pre-wrap;
+}
+
 .commit:hover {
   background-color: var(--git-log-hover-bg);
 }
@@ -127,6 +155,10 @@ sheet.replaceSync(/* css */ `
   color: var(--git-log-text-color);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.commit-full .commit-message {
+  overflow-wrap: anywhere;
 }
 
 .commit-author,

@@ -48,11 +48,13 @@ describe("GitLogElement", () => {
     element.revisions = "main..feature";
     element.maxCount = 20;
     element.leftRight = true;
+    element.oneline = true;
 
     expect(element.getAttribute("repository")).toBe("https://github.com/owner/project");
     expect(element.getAttribute("revisions")).toBe("main..feature");
     expect(element.getAttribute("max-count")).toBe("20");
     expect(element.hasAttribute("left-right")).toBe(true);
+    expect(element.hasAttribute("oneline")).toBe(true);
   });
 
   it("loads and renders commit history", async () => {
@@ -64,6 +66,7 @@ describe("GitLogElement", () => {
 
     element.repository = "https://github.com/owner/component-project";
     element.revisions = "main";
+    element.oneline = true;
 
     await vi.waitFor(() => {
       expect(element.shadowRoot!.querySelectorAll(".commit")).toHaveLength(1);
@@ -78,6 +81,33 @@ describe("GitLogElement", () => {
     expect(element.shadowRoot!.querySelector(".commit-date")?.textContent).toBe("2026-09-18");
     expect(element.hasAttribute("aria-busy")).toBe(false);
     expect(loadListener).toHaveBeenCalledOnce();
+  });
+
+  it("renders regular git-log details by default", async () => {
+    const commit = githubCommit("a".repeat(40));
+    const fetchMock = vi.fn().mockResolvedValue(Response.json([commit]));
+    vi.stubGlobal("fetch", fetchMock);
+
+    element.repository = "https://github.com/owner/full-project";
+    element.revisions = "main";
+
+    await vi.waitFor(() => {
+      expect(element.shadowRoot!.querySelectorAll(".commit")).toHaveLength(1);
+    });
+
+    expect(element.shadowRoot!.querySelector(".commit")?.classList.contains("commit-full")).toBe(
+      true,
+    );
+    expect(element.shadowRoot!.querySelector(".commit-hash")?.textContent).toBe(
+      `commit ${commit.sha}`,
+    );
+    expect(element.shadowRoot!.querySelector(".commit-message")?.textContent).toBe(
+      commit.commit.message,
+    );
+    expect(element.shadowRoot!.querySelector(".commit-author")?.textContent).toBe(
+      "Author: Ada Lovelace <ada@example.com>",
+    );
+    expect(element.shadowRoot!.querySelector(".commit-date")?.textContent).toBe("Date: 2026-09-18");
   });
 
   it("shows an accessible error state when loading fails", async () => {

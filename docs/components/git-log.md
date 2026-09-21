@@ -9,18 +9,32 @@ See [supported Git hosts](/guides/supported-git-hosts) for accepted repository U
 
 ## Branch history
 
-A single revision accepts a branch, tag, or full commit ID. This live example reads the latest six
+A single revision accepts a branch, tag, or full commit ID. This live example reads the latest three
 commits from `git-elements.js`:
 
 ```html
 <git-log
   repository="https://github.com/erkde/git-elements.js"
   revisions="main"
-  max-count="6"
+  max-count="3"
 ></git-log>
 ```
 
-<GitLogDemo revisions="main" :max-count="6" />
+<GitLogDemo revisions="main" :max-count="3" />
+
+By default, `<git-log>` renders regular `git log`-style commit details, including the full hash,
+author, date, and complete commit message. Add `oneline` to use the compact format:
+
+```html
+<git-log
+  repository="https://github.com/erkde/git-elements.js"
+  revisions="main"
+  max-count="6"
+  oneline
+></git-log>
+```
+
+<GitLogDemo revisions="main" :max-count="6" oneline />
 
 ## Revision sets
 

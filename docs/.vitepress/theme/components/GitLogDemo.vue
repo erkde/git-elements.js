@@ -6,10 +6,12 @@ withDefaults(
     revisions: string;
     maxCount?: number;
     leftRight?: boolean;
+    oneline?: boolean;
   }>(),
   {
     maxCount: 30,
     leftRight: false,
+    oneline: false,
   },
 );
 
@@ -23,6 +25,7 @@ const { isDark } = useData();
       :revisions="revisions"
       :max-count="maxCount"
       :left-right="leftRight || undefined"
+      :oneline="oneline || undefined"
       :theme="isDark ? 'dark' : 'light'"
     >
       <span slot="loading" class="resource-message">Loading repository history…</span>

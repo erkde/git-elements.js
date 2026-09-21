@@ -14,6 +14,7 @@ const DEFAULT_MAX_COUNT = 30;
  * @attr {string} revisions - Branch, tag, commit ID, or two-dot or three-dot revision set.
  * @attr {number} max-count - Maximum number of commits to display, from 1 to 100.
  * @attr {boolean} left-right - Mark each side of a symmetric three-dot revision set.
+ * @attr {boolean} oneline - Use a compact one-line entry for each commit.
  * @attr {"light" | "dark"} theme - Override the operating-system color preference.
  *
  * @slot loading - Content shown when loading exceeds the configured delay.
@@ -48,7 +49,7 @@ const DEFAULT_MAX_COUNT = 30;
  * @csspart error - Error-state container.
  */
 export class GitLogElement extends HTMLElement {
-  static observedAttributes = ["repository", "revisions", "max-count", "left-right"];
+  static observedAttributes = ["repository", "revisions", "max-count", "left-right", "oneline"];
 
   private _commits: GitLogCommit[] = [];
   private _container: HTMLOListElement;
@@ -82,6 +83,10 @@ export class GitLogElement extends HTMLElement {
 
   attributeChangedCallback(_name: string, oldValue: string | null, newValue: string | null): void {
     if (oldValue === newValue || !this.isConnected) {
+      return;
+    }
+    if (_name === "oneline") {
+      this.render();
       return;
     }
     void this.load();
@@ -133,6 +138,15 @@ export class GitLogElement extends HTMLElement {
 
   set leftRight(value: boolean) {
     this.toggleAttribute("left-right", value);
+  }
+
+  /** Whether to use the compact one-line commit format. */
+  get oneline(): boolean {
+    return this.hasAttribute("oneline");
+  }
+
+  set oneline(value: boolean) {
+    this.toggleAttribute("oneline", value);
   }
 
   /** Normalized commits currently displayed by the element. */
@@ -231,7 +245,7 @@ export class GitLogElement extends HTMLElement {
       const hash = document.createElement(commit.href ? "a" : "span");
       hash.className = "commit-hash";
       hash.setAttribute("part", "hash");
-      hash.textContent = commit.hash.slice(0, 7);
+      hash.textContent = this.oneline ? commit.hash.slice(0, 7) : `commit ${commit.hash}`;
       hash.title = commit.hash;
       if (hash instanceof HTMLAnchorElement) {
         hash.href = commit.href;
@@ -240,21 +254,32 @@ export class GitLogElement extends HTMLElement {
       const message = document.createElement("span");
       message.className = "commit-message";
       message.setAttribute("part", "message");
-      message.textContent = commit.message.split(/\r?\n/, 1)[0] ?? "";
+      message.textContent = this.oneline
+        ? (commit.message.split(/\r?\n/, 1)[0] ?? "")
+        : commit.message;
       message.title = commit.message;
 
       const author = document.createElement("span");
       author.className = "commit-author";
       author.setAttribute("part", "author");
-      author.textContent = commit.author.name;
+      author.textContent = this.oneline
+        ? commit.author.name
+        : `Author: ${commit.author.name}${commit.author.email ? ` <${commit.author.email}>` : ""}`;
 
       const time = document.createElement("time");
       time.className = "commit-date";
       time.setAttribute("part", "date");
       time.dateTime = commit.committer.date ?? "";
-      time.textContent = formatDate(commit.committer.date);
+      time.textContent = this.oneline
+        ? formatDate(commit.committer.date)
+        : `Date: ${formatDate(commit.committer.date)}`;
 
-      item.append(side, hash, message, author, time);
+      if (this.oneline) {
+        item.append(side, hash, message, author, time);
+      } else {
+        item.append(side, hash, author, time, message);
+      }
+      item.classList.toggle("commit-full", !this.oneline);
       fragment.appendChild(item);
     }
     this._container.replaceChildren(fragment);
