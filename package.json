@@ -59,8 +59,9 @@
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
     "analyze": "cem analyze",
-    "prepublishOnly": "npm test && npm run build",
+    "prepublishOnly": "npm test && npm run build && npm run size",
     "preview": "npm run build:demo && vitepress preview docs",
+    "size": "node scripts/check-bundle-size.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
