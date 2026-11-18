@@ -71,9 +71,9 @@
     "oxfmt": "^0.77.0",
     "tsup": "^9.0.0",
     "typescript": "^7.0.2",
-    "vite": "^8.3.6",
+    "vite": "^8.3.8",
     "vitepress": "2.0.0-alpha.20",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   },
   "customElements": "custom-elements.json"
 }
